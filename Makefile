@@ -6,7 +6,7 @@
 # clean:;$(CLEAN)
 
 # List of all programs you want to build
-EX= ferris_wheel
+EX= carnival
 
 # Libraries - Linux and various flavors of Unix
 LIBS=-lglut -lGLU

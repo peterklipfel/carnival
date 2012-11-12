@@ -1,5 +1,5 @@
 ================================================================================
-Ferris Wheel
+Carnival
 ================================================================================
 
 This project is a moving ferris wheel.  I used box-like structures to form the spokes, support, and passenger boxes.  I used half-spheres to form the lights, and used a simple line to create the frame.  I experimented with using a full polygon, but the effect was best when using thin line.  Creating thin polygons that stayed on the edge of the radius proved quite difficult (hopefully that will be version 2).
@@ -7,28 +7,28 @@ This project is a moving ferris wheel.  I used box-like structures to form the s
 The controls are as follows
 esc        - exit
 Arrow Keys - Move around space
-page up		 - increase the view size (zoom out)
+page up    - increase the view size (zoom out)
 page down	 - decrease the view size (zoom in)
 g(or G)    - toggle axes
-r(or R)		 - reset display 
-t(or T) 	 - toggle earthquake (tremble) mode
-b(or B)		 - toggle lighting effects
-a 				 - decrease amient light
-A 				 - increase ambient light
-c 				 - decrease specularity
-C 				 - increase specularity
-d 	 			 - decrase diffusion
-D 				 - increase diffusion
-e 			 	 - decrease emission
-E 				 - increase emission
-l 				 - decrease the number of lights
-L 				 - increase number of lights
-n 	  	 	 - decrease shinyness
-N 				 - increase shinyness
-s 				 - decrease the number of spokes
-S 				 - increase the number of spokes
-v 				 - slow down ferris wheel
-V 				 - speed up ferris wheel
+r(or R)    - reset display 
+t(or T)    - toggle earthquake (tremble) mode
+b(or B)	   - toggle lighting effects
+a          - decrease amient light
+A          - increase ambient light
+c          - decrease specularity
+C          - increase specularity
+d          - decrase diffusion
+D          - increase diffusion
+e          - decrease emission
+E          - increase emission
+l          - decrease the number of lights
+L          - increase number of lights
+n          - decrease shinyness
+N          - increase shinyness
+s          - decrease the number of spokes
+S          - increase the number of spokes
+v          - slow down ferris wheel
+V          - speed up ferris wheel
 
 
 

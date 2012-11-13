@@ -91,35 +91,25 @@ static void ground(double x,  double y,  double z,
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
    glColor3f(1,1,1);
-   glBindTexture(GL_TEXTURE_2D,texture[1]);
+   glBindTexture(GL_TEXTURE_2D,texture[3]);
 
    //  passenger_box
    glNormal3f( 0,+1, 0);
    glBegin(GL_QUADS);
    int i, j;
-   double mul = 2/quads;
+   double mul = 2.0/quads;
 
-   for(i=0; i < quads; i++)
+   for (i=0;i<quads;i++)
    {
-      for(j=0; j < quads; j++)
+      for (j=0;j<quads;j++)
       {
-         glTexCoord2f(mul*(i+0),mul*(j+0)); glVertex3f(-1,0,+1); //1
-         glTexCoord2f(mul*(i+1),mul*(j+0)); glVertex3f(+1,0,+1); //2
-         glTexCoord2f(mul*(i+1),mul*(j+1)); glVertex3f(+1,0,-1); //3
-         glTexCoord2f(mul*(i+0),mul*(j+1)); glVertex3f(-1,0,-1); //4
+         // printf("x: %f, y: %f ---- i: %d, j: %d \n", 5*mul*(i+0), 5*mul*(j+0)-5, i, j);
+         glTexCoord2f(mul*(i+0),mul*(j+0)); glVertex3d(5*mul*(i+0)-5,0, 5*mul*(j+0)-5);
+         glTexCoord2f(mul*(i+1),mul*(j+0)); glVertex3d(5*mul*(i+1)-5,0, 5*mul*(j+0)-5);
+         glTexCoord2f(mul*(i+1),mul*(j+1)); glVertex3d(5*mul*(i+1)-5,0, 5*mul*(j+1)-5);
+         glTexCoord2f(mul*(i+0),mul*(j+1)); glVertex3d(5*mul*(i+0)-5,0, 5*mul*(j+1)-5);
       }
    }
-
-   // for (i=0;i<quads;i++)
-   // {
-   //    for (j=0;j<quads;j++)
-   //    {
-   //       glTexCoord2d(mul*(i+0),mul*(j+0)); glVertex3f(5*mul*(i+0)-5,5*mul*(j+0)-5, 0);
-   //       glTexCoord2d(mul*(i+1),mul*(j+0)); glVertex3f(5*mul*(i+1)-5,5*mul*(j+0)-5, 0);
-   //       glTexCoord2d(mul*(i+1),mul*(j+1)); glVertex3f(5*mul*(i+1)-5,5*mul*(j+1)-5, 0);
-   //       glTexCoord2d(mul*(i+0),mul*(j+1)); glVertex3f(5*mul*(i+0)-5,5*mul*(j+1)-5, 0);
-   //    }
-   // }
 
    //  End
    glEnd();
@@ -417,7 +407,7 @@ static void sky(double x,double y,double z,double r, double start_angle, double 
    //  Offset and scale
    glTranslated(x,y,z);
    glScaled(r,r,r);
-   glColor3f(.7, .75, 1);
+   glColor3f(0, .75, 1);
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {
@@ -545,7 +535,7 @@ void display()
       //  Location of viewer for specular calculations
       glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,local);
       //  glColor sets ambient and diffuse color materials
-      glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+      glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
       glEnable(GL_COLOR_MATERIAL);
       //  Enable light 0
       glEnable(GL_LIGHT0);
@@ -569,8 +559,8 @@ void display()
    // ferris_wheel(ferris1x/10, 0, -5, 1);
    ferris_wheel(ferris2x/10, 2.4, 0, 1);
 
-   sky(-1,-1,-1,100, 90, 270);
-   ground(-1, -1, -1, 100, 0, 100, 0, 0, 0, 10);
+   sky(-1,-1,-1,40, 90, 270);
+   ground(-1, -1, -1, 40, 0, 40, 0, 0, 0, 300);
 
    //  Draw axes
    glColor3f(1,1,1);
@@ -787,6 +777,7 @@ int main(int argc,char* argv[])
    texture[0] = LoadTexBMP("textures/crate.bmp");
    texture[1] = LoadTexBMP("textures/metal1.bmp");
    texture[2] = LoadTexBMP("textures/face.bmp");
+   texture[3] = LoadTexBMP("textures/grass.bmp");
    //  Pass control to GLUT so it can interact with the user
    ErrCheck("init");
    glutMainLoop();

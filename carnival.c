@@ -405,7 +405,7 @@ static void scrambler(double x, double y , double z, double size) {
    glColor3f(0.5,0.5,0.5);
    double conversion = 180/pi;
    int current_spoke;
-   int speed = 15;
+   int speed = 0;
    double offset = 0;
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
@@ -426,6 +426,23 @@ static void scrambler(double x, double y , double z, double size) {
     
       beam(passenger_box_x,1.9,passenger_box_z, 0.4, 0.05, 0.05, 90, 0, 0, 1);
       beam(passenger_box_x,1.9,passenger_box_z, 0.05, 0.05, 0.4, 90, 0, 0, 1);
+
+      if(globals.num_lights){
+         int spacing;
+         double x_angle, z_angle, radius, offset2;
+     
+         offset2 = i*pi/num_spokes;
+         for(spacing = 1; spacing < globals.num_lights+1; spacing++)
+         {
+            // light(spacing*r*cos(offset + globals.rotation)/globals.num_lights, 
+            //       spacing*r*sin(offset + globals.rotation)/globals.num_lights, 0.35, 0.1, 90, 270);
+            radius = spacing*r/globals.num_lights - 0.1;
+            x_angle = sin(offset2 + globals.rotation*speed);
+            z_angle = cos(offset2 + globals.rotation*speed);
+
+            light(radius*x_angle, 2.9, radius*z_angle, 0.1, 0, 360);
+         }
+      }
    }
 
    // center axis

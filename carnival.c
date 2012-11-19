@@ -104,7 +104,7 @@ static void outer_frame(double center_x, double center_y,
 
 static void beam(double x,double y,double z,
                  double dx,double dy,double dz,
-                 double th1, double th2, double ph)
+                 double th1, double th2, double ph, double ph2)
 {
    float white[] = {1,1,1,1};
    float Emission[]  = {0.0,0.0,0.01*lighting_struct.emission,1.0};
@@ -116,7 +116,7 @@ static void beam(double x,double y,double z,
    glPushMatrix();
    //  Offset
    glTranslated(x,y,z);
-   glRotated(th1,ph,1,th2);
+   glRotated(th1,ph,ph2,th2);
    glScaled(dx,dy,dz);
 
    glEnable(GL_TEXTURE_2D);
@@ -345,20 +345,20 @@ static void ferris_wheel(double x, double y , double z, double size)
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
       offset = current_spoke*(180/num_spokes);
-      beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
-      beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
+      beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1);
+      beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1);
    }
 
    // center axis
    glColor3f(0.2,0.5,0.2);
-   beam(0,0,0, 1, 0.1, 0.1, 90, 0, 0);
+   beam(0,0,0, 1, 0.1, 0.1, 90, 0, 0, 1);
 
    // braces
    glColor3f(0.2,0.2,0.5);
-   beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0);
-   beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0);
-   beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0);
-   beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0);
+   beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0, 1);
+   beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0, 1);
+   beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0, 1);
+   beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0, 1);
 
 
    if(globals.num_lights){
@@ -382,6 +382,78 @@ static void ferris_wheel(double x, double y , double z, double size)
          }
       }
    }
+   glPopMatrix();
+}
+
+static void scrambler(double x, double y , double z, double size) {
+      double pi = 3.14159265358979323846;
+   double step = 2*pi/10;
+   double r = 3;
+   int i;
+   //  Draw passenger_boxes
+   glPushMatrix();
+   glTranslated(x,y,z);
+   glScaled(size,size,size);
+   // for (i=0;i<10;i++)
+   // {
+   //    double passenger_box_x = r * cos(i*step+globals.rotation);
+   //    double passenger_box_y = r * sin(i*step+globals.rotation);
+   //    passenger_box(passenger_box_x, passenger_box_y,0 , 0.3,0.3,0.3 , 0);
+   // }
+
+   // Draw Circle
+   // outer_frame(0, 0, -0.31, r, 10, step);
+   // outer_frame(0, 0, 0.31, r, 10, step);
+
+
+   // Draw the globals.spokes
+   glColor3f(0.5,0.5,0.5);
+   double conversion = 180/pi;
+   int current_spoke;
+   int num_spokes = globals.spokes;
+
+   // double offset = 0;
+   // for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
+   // {
+   //    offset = current_spoke*(180/num_spokes);
+   //    beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
+   //    beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
+   // }
+
+   // center axis
+   glColor3f(0.2,0.5,0.2);
+   beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1);
+   beam(0, 2.75, 0, 0.5, 1.5, 0.5,  15*conversion*globals.rotation, 0, 0, 90);
+
+   // braces
+   // glColor3f(0.2,0.2,0.5);
+   // beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0);
+   // beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0);
+   // beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0);
+   // beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0);
+
+
+   // if(globals.num_lights){
+   //    int spacing;
+   //    r = r-0.1;
+   //    num_spokes = num_spokes*2;
+   //    double x_angle, y_angle, radius;
+   //    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
+   //    {
+   //       offset = current_spoke*2*pi/num_spokes;
+   //       for(spacing = 1; spacing < globals.num_lights+1; spacing++)
+   //       {
+   //          // light(spacing*r*cos(offset + globals.rotation)/globals.num_lights, 
+   //          //       spacing*r*sin(offset + globals.rotation)/globals.num_lights, 0.35, 0.1, 90, 270);
+   //          radius = spacing*r/globals.num_lights;
+   //          x_angle = cos(offset + globals.rotation);
+   //          y_angle = sin(offset + globals.rotation);
+
+   //          light(radius*x_angle, radius*y_angle, 0.35, 0.1, 0, 180);
+   //          light(radius*x_angle, radius*y_angle, -0.35, 0.1, -180, 0);
+   //       }
+   //    }
+   // }
    glPopMatrix();
 }
 
@@ -453,6 +525,8 @@ void display()
    ferris_wheel(ferris1x/10, 2.4, -20, 1);
    ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
+   scrambler(0, 0, 0, 1);
+
    sky(-1,-1,-1,40, 90, 270);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
@@ -483,7 +557,7 @@ void display()
    if (lighting_struct.lamp)
    {
       glWindowPos2i(5,45);
-      Print("Model=%s LocalViewer=%s Distance=%d Elevation=%.1f",lighting_struct.smooth?"Smooth":"Flat",lighting_struct.local?"On":"Off",lighting_struct.distance,lighting_struct.ylight);
+      Print("Model=%s LocalViewer=%s Distance=%d Elevation=%.1f Rotation=%.5f",lighting_struct.smooth?"Smooth":"Flat",lighting_struct.local?"On":"Off",lighting_struct.distance,lighting_struct.ylight, globals.rotation);
       glWindowPos2i(5,25);
       Print("Ambient=%d  Diffuse=%d Specular=%d Emission=%d Shininess=%.0f",lighting_struct.ambient,lighting_struct.diffuse,lighting_struct.specular,lighting_struct.emission,lighting_struct.shinyvec[0]);
    }   

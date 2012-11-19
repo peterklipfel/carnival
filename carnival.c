@@ -386,20 +386,15 @@ static void ferris_wheel(double x, double y , double z, double size)
 }
 
 static void scrambler(double x, double y , double z, double size) {
-      double pi = 3.14159265358979323846;
-   double step = 2*pi/10;
-   double r = 3;
+   int num_spokes = 4;
+   double pi = 3.14159265358979323846;
+   double step = pi/num_spokes;
+   double r = 4;
    int i;
    //  Draw passenger_boxes
    glPushMatrix();
    glTranslated(x,y,z);
    glScaled(size,size,size);
-   // for (i=0;i<10;i++)
-   // {
-   //    double passenger_box_x = r * cos(i*step+globals.rotation);
-   //    double passenger_box_y = r * sin(i*step+globals.rotation);
-   //    passenger_box(passenger_box_x, passenger_box_y,0 , 0.3,0.3,0.3 , 0);
-   // }
 
    // Draw Circle
    // outer_frame(0, 0, -0.31, r, 10, step);
@@ -410,20 +405,24 @@ static void scrambler(double x, double y , double z, double size) {
    glColor3f(0.5,0.5,0.5);
    double conversion = 180/pi;
    int current_spoke;
-   int num_spokes = globals.spokes;
-
-   // double offset = 0;
-   // for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
-   // {
-   //    offset = current_spoke*(180/num_spokes);
-   //    beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
-   //    beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0);
-   // }
+   int speed = 15;
+   double offset = 0;
+   for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
+   {
+      offset = current_spoke*(180/num_spokes);
+      beam(0,2.75,0, 4, 0.15, 0.15,offset + speed*conversion*globals.rotation, 0, 0, 90);
+   }
+   for (i=0;i<num_spokes*2;i++)
+   {
+      double passenger_box_x = r * sin(i*step+globals.rotation*speed);
+      double passenger_box_z = r * cos(i*step+globals.rotation*speed);
+      passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0);
+   }
 
    // center axis
    glColor3f(0.2,0.5,0.2);
    beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1);
-   beam(0, 2.75, 0, 0.5, 1.5, 0.5,  15*conversion*globals.rotation, 0, 0, 90);
+   beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90);
 
    // braces
    // glColor3f(0.2,0.2,0.5);

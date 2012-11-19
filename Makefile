@@ -20,7 +20,7 @@ all: $(EX)
 	gcc -c -O -Wall $<
 
 # Generic compile and link
-%: %.c CSCIx229.a
+%: %.c CSCIx229.a utilities.h
 	gcc -Wall -O3 -o $@ $^ $(LIBS)
 
 # Delete unwanted files

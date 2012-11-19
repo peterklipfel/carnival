@@ -313,34 +313,6 @@ static void passenger_box(double x,double y,double z,
    glDisable(GL_TEXTURE_2D);
 }
 
-
-
-static void light(double x,double y,double z,double r, double start_angle, double end_angle)
-{
-   const int d=5;
-   int th,ph;
-
-   //  Save transformation
-   glPushMatrix();
-   //  Offset and scale
-   glTranslated(x,y,z);
-   glScaled(r,r,r);
-   glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
-   //  Latitude bands
-   for (ph=start_angle;ph<end_angle;ph+=d)
-   {
-      glBegin(GL_QUAD_STRIP);
-      for (th=90;th<=270;th+=d)
-      {
-         Vertex(th,ph);
-         Vertex(th,ph+d);
-      }
-      glEnd();
-   }
-   //  Undo transformations
-   glPopMatrix();
-}
-
 static void ferris_wheel(double x, double y , double z, double size)
 {
    double pi = 3.14159265358979323846;

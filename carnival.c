@@ -40,7 +40,7 @@ void initialize(){
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
    lighting_struct.emission  =   0;  // Emission intensity (%)
-   lighting_struct.ambient   =   0;  // Ambient intensity (%)
+   lighting_struct.ambient   =   100;  // Ambient intensity (%)
    lighting_struct.diffuse   = 100;  // Diffuse intensity (%)
    lighting_struct.specular  =   0;  // Specular intensity (%)
    lighting_struct.shininess =   0;  // Shininess (power of two)
@@ -417,6 +417,15 @@ static void scrambler(double x, double y , double z, double size) {
       double passenger_box_x = r * sin(i*step+globals.rotation*speed);
       double passenger_box_z = r * cos(i*step+globals.rotation*speed);
       passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0);
+      beam(passenger_box_x,2.2,passenger_box_z, 0.05, .4, 0.05, 90, 0, 0, 1);
+
+      beam(passenger_box_x-0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1);
+      beam(passenger_box_x+0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1);
+      beam(passenger_box_x,1.4,passenger_box_z-0.3, 0.01, .4, 0.01, 90, 0, 0, 1);
+      beam(passenger_box_x,1.4,passenger_box_z+0.3, 0.01, .4, 0.01, 90, 0, 0, 1);
+    
+      beam(passenger_box_x,1.9,passenger_box_z, 0.4, 0.05, 0.05, 90, 0, 0, 1);
+      beam(passenger_box_x,1.9,passenger_box_z, 0.05, 0.05, 0.4, 90, 0, 0, 1);
    }
 
    // center axis
@@ -424,12 +433,6 @@ static void scrambler(double x, double y , double z, double size) {
    beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1);
    beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90);
 
-   // braces
-   // glColor3f(0.2,0.2,0.5);
-   // beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0);
-   // beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0);
-   // beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0);
-   // beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0);
 
 
    // if(globals.num_lights){
@@ -735,7 +738,7 @@ int main(int argc,char* argv[])
    glutInit(&argc,argv);
    //  Request double buffered, true color window with Z buffering at 600x600
    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-   glutInitWindowSize(600,600);
+   glutInitWindowSize(1920,1080);
    glutCreateWindow("Ferris Wheel");
    //  Set callbacks
    glutDisplayFunc(display);

@@ -45,7 +45,7 @@ void initialize(){
    lighting_struct.specular  =   0;  // Specular intensity (%)
    lighting_struct.shininess =   0;  // Shininess (power of two)
    lighting_struct.zh        =  90;  // Light azimuth
-   lighting_struct.ylight  =   0;  // Elevation of light
+   lighting_struct.ylight  =   3;  // Elevation of light
 
 
 }

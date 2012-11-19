@@ -414,6 +414,7 @@ static void scrambler(double x, double y , double z, double size) {
    }
    for (i=0;i<num_spokes*2;i++)
    {
+      glColor3f(1,1,1);
       double passenger_box_x = r * sin(i*step+globals.rotation*speed);
       double passenger_box_z = r * cos(i*step+globals.rotation*speed);
       passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0);

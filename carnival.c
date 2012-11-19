@@ -40,7 +40,7 @@ void initialize(){
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
    lighting_struct.emission  =   0;  // Emission intensity (%)
-   lighting_struct.ambient   =  30;  // Ambient intensity (%)
+   lighting_struct.ambient   =   0;  // Ambient intensity (%)
    lighting_struct.diffuse   = 100;  // Diffuse intensity (%)
    lighting_struct.specular  =   0;  // Specular intensity (%)
    lighting_struct.shininess =   0;  // Shininess (power of two)
@@ -385,6 +385,34 @@ static void ferris_wheel(double x, double y , double z, double size)
    glPopMatrix();
 }
 
+static void draw_lamp(){
+      //  Translate intensity to color vectors
+   float Ambient[]   = {0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,1.0};
+   float Diffuse[]   = {0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,1.0};
+   float Specular[]  = {0.01*lighting_struct.specular,0.01*lighting_struct.specular,0.01*lighting_struct.specular,1.0};
+   //  Light position
+   float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
+   //  Draw light position as ball (still no lighting here)
+   glColor3f(1,1,1);
+   ball(Position[0],Position[1],Position[2] , 0.1);
+   //  OpenGL should normalize normal vectors
+   glEnable(GL_NORMALIZE);
+   //  Enable lighting
+   glEnable(GL_LIGHTING);
+   //  Location of viewer for lighting_struct.specular calculations
+   glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
+   //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
+   glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
+   //  Enable light 0
+   glEnable(GL_LIGHT0);
+   //  Set lighting_struct.ambient, lighting_struct.diffuse, lighting_struct.specular complighting_struct.onents and position of light 0
+   glLightfv(GL_LIGHT0,GL_AMBIENT ,Ambient);
+   glLightfv(GL_LIGHT0,GL_DIFFUSE ,Diffuse);
+   glLightfv(GL_LIGHT0,GL_SPECULAR,Specular);
+   glLightfv(GL_LIGHT0,GL_POSITION,Position);
+}
+
 /*
  *  OpenGL (GLUT) calls this routine to display the scene
  */
@@ -409,48 +437,24 @@ void display()
    // Light switch
    if (lighting_struct.lamp)
    {
-      //  Translate intensity to color vectors
-      float Ambient[]   = {0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,1.0};
-      float Diffuse[]   = {0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,1.0};
-      float Specular[]  = {0.01*lighting_struct.specular,0.01*lighting_struct.specular,0.01*lighting_struct.specular,1.0};
-      //  Light position
-      float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
-      //  Draw light position as ball (still no lighting here)
-      glColor3f(1,1,1);
-      ball(Position[0],Position[1],Position[2] , 0.1);
-      //  OpenGL should normalize normal vectors
-      glEnable(GL_NORMALIZE);
-      //  Enable lighting
-      glEnable(GL_LIGHTING);
-      //  Location of viewer for lighting_struct.specular calculations
-      glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
-      //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
-      glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
-      glEnable(GL_COLOR_MATERIAL);
-      //  Enable light 0
-      glEnable(GL_LIGHT0);
-      //  Set lighting_struct.ambient, lighting_struct.diffuse, lighting_struct.specular complighting_struct.onents and position of light 0
-      glLightfv(GL_LIGHT0,GL_AMBIENT ,Ambient);
-      glLightfv(GL_LIGHT0,GL_DIFFUSE ,Diffuse);
-      glLightfv(GL_LIGHT0,GL_SPECULAR,Specular);
-      glLightfv(GL_LIGHT0,GL_POSITION,Position);
+      draw_lamp();   
    }
    else
      glDisable(GL_LIGHTING);
-
-   // double ferris1x = 0;
-   double ferris2x = 0;
+   int damping = 10;
+   double ferris1x = damping*10;
+   double ferris2x = damping*-15;
    if (globals.earthquake)
    {
-      // ferris1x = sin(500*globals.rotation);
+      ferris1x = sin(500*globals.rotation);
       ferris2x = cos(630*globals.rotation);
    }
 
-   // ferris_wheel(ferris1x/10, 0, -5, 1);
-   ferris_wheel(ferris2x/10, 2.4, 0, 1);
+   ferris_wheel(ferris1x/10, 2.4, -20, 1);
+   ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
    sky(-1,-1,-1,40, 90, 270);
-   ground(-1, -1, -1, 40, 0, 40, 0, 0, 0, 300, lighting_struct, texture[3]);
+   ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
    //  Draw globals.axes
    glColor3f(1,1,1);

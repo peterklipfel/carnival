@@ -405,7 +405,7 @@ static void scrambler(double x, double y , double z, double size) {
    glColor3f(0.5,0.5,0.5);
    double conversion = 180/pi;
    int current_spoke;
-   int speed = 0;
+   int speed = 15;
    double offset = 0;
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
@@ -536,16 +536,22 @@ void display()
    int damping = 10;
    double ferris1x = damping*10;
    double ferris2x = damping*-15;
+   double scrambler1x = damping*8;
+   double scrambler2x = damping*-14;
    if (globals.earthquake)
    {
-      ferris1x = sin(500*globals.rotation);
-      ferris2x = cos(630*globals.rotation);
+      ferris1x = ferris1x+sin(500*globals.rotation);
+      ferris2x = ferris2x+cos(630*globals.rotation);
+
+      scrambler1x = scrambler1x+sin(520*globals.rotation);
+      scrambler2x = scrambler2x+sin(604*globals.rotation);
    }
 
-   ferris_wheel(ferris1x/10, 2.4, -20, 1);
+   ferris_wheel(ferris1x/damping, 2.4, -20, 1);
    ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
-   scrambler(0, 0, 0, 1);
+   scrambler(scrambler1x/damping, 0, 5, 1);
+   scrambler(scrambler2x/damping, 0, 15, 1);
 
    sky(-1,-1,-1,40, 90, 270);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);

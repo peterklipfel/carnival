@@ -435,8 +435,6 @@ static void scrambler(double x, double y , double z, double size) {
          offset2 = i*pi/num_spokes;
          for(spacing = 1; spacing < globals.num_lights+1; spacing++)
          {
-            // light(spacing*r*cos(offset + globals.rotation)/globals.num_lights, 
-            //       spacing*r*sin(offset + globals.rotation)/globals.num_lights, 0.35, 0.1, 90, 270);
             radius = spacing*r/globals.num_lights - 0.1;
             x_angle = sin(offset2 + globals.rotation*speed);
             z_angle = cos(offset2 + globals.rotation*speed);
@@ -451,29 +449,6 @@ static void scrambler(double x, double y , double z, double size) {
    beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1);
    beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90);
 
-
-
-   // if(globals.num_lights){
-   //    int spacing;
-   //    r = r-0.1;
-   //    num_spokes = num_spokes*2;
-   //    double x_angle, y_angle, radius;
-   //    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
-   //    {
-   //       offset = current_spoke*2*pi/num_spokes;
-   //       for(spacing = 1; spacing < globals.num_lights+1; spacing++)
-   //       {
-   //          // light(spacing*r*cos(offset + globals.rotation)/globals.num_lights, 
-   //          //       spacing*r*sin(offset + globals.rotation)/globals.num_lights, 0.35, 0.1, 90, 270);
-   //          radius = spacing*r/globals.num_lights;
-   //          x_angle = cos(offset + globals.rotation);
-   //          y_angle = sin(offset + globals.rotation);
-
-   //          light(radius*x_angle, radius*y_angle, 0.35, 0.1, 0, 180);
-   //          light(radius*x_angle, radius*y_angle, -0.35, 0.1, -180, 0);
-   //       }
-   //    }
-   // }
    glPopMatrix();
 }
 
@@ -536,7 +511,7 @@ void display()
    int damping = 10;
    double ferris1x = damping*10;
    double ferris2x = damping*-15;
-   double scrambler1x = damping*8;
+   double scrambler1x = damping*19;
    double scrambler2x = damping*-14;
    if (globals.earthquake)
    {

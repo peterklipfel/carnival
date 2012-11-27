@@ -203,86 +203,6 @@ static void ball(double x,double y,double z,double r)
 }
 
 // static void cylinder(double x,double y,double z,double r, double height)
-static void cylinder(double x, double y, double z, double r,
-                     double th, double thX, double thY, double thZ,
-                     double thStart, double thEnd,
-                     double dx, double dy, double dz, unsigned int texture)
-{
-   
-    const int d = 5;
-    //int th,ph;
-   
-    //Indexes:
-    int i, j, k;
- 
-    //  Save transformation
-    glPushMatrix();
-   
-    //  Offset and scale
-    glTranslated(x,y,z);
-    glRotated(th, thX, thY, thZ);
-    glScaled(r*dx,r*dy,r*dz);
-   
-    //  Set texture
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glColor3f(1, 1, 1);
-   
-    //Begins Drawing:
-    glBegin(GL_QUAD_STRIP);
-
-    //Sides:
-    for (i = thStart; i <= thEnd; i += 1)
-    {
-
-        //Set Normal Vector:
-        glNormal3d(Cos(i), 0, Sin(i));
-             
-        //Set Coordinates:
-        glTexCoord2f(i/22.5, 1);
-        glVertex3d(Cos(i), +1, Sin(i));
-        glTexCoord2f(i/22.5, -1);
-        glVertex3d(Cos(i), -1, Sin(i));
-    }
-
-    glEnd();
-
-    //Makes the Top and Bottoms of the Cylinder:
-   
-    for (j = 1; j >= -1; j -= 2)
-    {
-        glBegin(GL_QUAD_STRIP);
-   
-        //Determines Normal Based on Whether Top/Bottom
-        //is Being Drawn:
-        if(j == 1)
-        {
-            glNormal3d(0, 1, 0);
-        }
-   
-        else
-        {
-            glNormal3d(0, -1, 0);
-        }
-   
-        //Connects Center to Endpoint with GL_Quad_Strip:
-        for(k = 0; k <= 360; k += d)
-        {
-            glTexCoord2f(k, 1);
-            glVertex3d(Cos(k), j, Sin(k) );
-            glTexCoord2f(0, -1);
-            glVertex3d(0, j, 0);
-       
-        }
-   
-        glEnd();
-   
-    }   
-   
-    //Restores Previous:
-    glPopMatrix();   
-    glDisable(GL_TEXTURE_2D);    
-}
 
 static void person(double x, double y , double z, double r, double height)
 {
@@ -529,6 +449,54 @@ static void scrambler(double x, double y , double z, double size) {
    glPopMatrix();
 }
 
+static void tower(double x, double y, double z, double size)
+{
+   int num_spokes = 4;
+   double pi = 3.14159265358979323846;
+   double r = 4.1;
+   int i;
+   //  Draw passenger_boxes
+   glPushMatrix();
+   glTranslated(x,y,z);
+   glScaled(size,size,size);
+
+   // Draw the globals.spokes
+   glColor3f(0.5,0.5,0.5);
+   int speed = 5;
+
+   double height_osc = sin(globals.rotation*speed)*14;
+
+   cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[1]);
+// cylinder(double x, double y, double z, double r,
+//                   double th, double thX, double thY, double thZ,
+//                   double thStart, double thEnd,
+//                   double dx, double dy, double dz, unsigned int texture)
+
+   cylinder(0, height_osc + 14, 0, 1, 0, 0, 0, 0, 0, 360, 4, 1, 4, texture[3]);
+
+   for (i=0;i<num_spokes*2;i++)
+   {
+      if(globals.num_lights){
+         int spacing;
+         double x_angle, z_angle, radius, offset2;
+     
+         offset2 = i*pi/num_spokes;
+         for(spacing = 1; spacing < globals.num_lights+1; spacing++)
+         {
+            radius = spacing*r/globals.num_lights - 0.1;
+            x_angle = sin(offset2 + globals.rotation*speed);
+            z_angle = cos(offset2 + globals.rotation*speed);
+
+            light(radius*x_angle, height_osc + 13, radius*z_angle, 0.1, 0, 360);
+            light(radius*x_angle, height_osc + 15, radius*z_angle, 0.1, 0, 360);
+         }
+      }
+   }
+
+   glPopMatrix();
+}
+
+
 static void draw_lamp(){
       //  Translate intensity to color vectors
    float Ambient[]   = {0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,1.0};
@@ -608,12 +576,7 @@ void display()
    sky(-1,-1,-1,40, 90, 270);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
-   cylinder(0, 1, 0, 5, 0, 0, 0, 0, 0, 360, 1, 0.1, 1, texture[1]);
-   // cylinder(double x, double y, double z, double r,
-   //                   double th, double thX, double thY, double thZ,
-   //                   double thStart, double thEnd,
-   //                   double dx, double dy, double dz, unsigned int texture)
-
+   tower(0, -1, 0, 0.5);
    //  Draw globals.axes
    glColor3f(1,1,1);
    if (globals.axes)

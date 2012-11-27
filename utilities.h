@@ -72,6 +72,88 @@ static void Vertex(double th,double ph)
    glVertex3d(x,y,z);
 };
 
+static void cylinder(double x, double y, double z, double r,
+                     double th, double thX, double thY, double thZ,
+                     double thStart, double thEnd,
+                     double dx, double dy, double dz, unsigned int texture)
+{
+   
+    const int d = 5;
+    //int th,ph;
+   
+    //Indexes:
+    int i, j, k;
+ 
+    //  Save transformation
+    glPushMatrix();
+   
+    //  Offset and scale
+    glTranslated(x,y,z);
+    glRotated(th, thX, thY, thZ);
+    glScaled(r*dx,r*dy,r*dz);
+   
+    //  Set texture
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glColor3f(1, 1, 1);
+   
+    //Begins Drawing:
+    glBegin(GL_QUAD_STRIP);
+
+    //Sides:
+    for (i = thStart; i <= thEnd; i += 1)
+    {
+
+        //Set Normal Vector:
+        glNormal3d(Cos(i), 0, Sin(i));
+             
+        //Set Coordinates:
+        glTexCoord2f(i/22.5, 1);
+        glVertex3d(Cos(i), +1, Sin(i));
+        glTexCoord2f(i/22.5, -1);
+        glVertex3d(Cos(i), -1, Sin(i));
+    }
+
+    glEnd();
+
+    //Makes the Top and Bottoms of the Cylinder:
+   
+    for (j = 1; j >= -1; j -= 2)
+    {
+        glBegin(GL_QUAD_STRIP);
+   
+        //Determines Normal Based on Whether Top/Bottom
+        //is Being Drawn:
+        if(j == 1)
+        {
+            glNormal3d(0, 1, 0);
+        }
+   
+        else
+        {
+            glNormal3d(0, -1, 0);
+        }
+   
+        //Connects Center to Endpoint with GL_Quad_Strip:
+        for(k = 0; k <= 360; k += d)
+        {
+            glTexCoord2f(k, 1);
+            glVertex3d(Cos(k), j, Sin(k) );
+            glTexCoord2f(0, -1);
+            glVertex3d(0, j, 0);
+       
+        }
+   
+        glEnd();
+   
+    }   
+   
+    //Restores Previous:
+    glPopMatrix();   
+    glDisable(GL_TEXTURE_2D);    
+}
+
+
 static void light(double x,double y,double z,double r, double start_angle, double end_angle)
 {
    const int d=5;

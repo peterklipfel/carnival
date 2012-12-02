@@ -117,7 +117,7 @@ static void cylinder(double x, double y, double z, double r,
     glEnd();
 
     //Makes the Top and Bottoms of the Cylinder:
-   
+    glColor3f(0,0,0);
     for (j = 1; j >= -1; j -= 2)
     {
         glBegin(GL_QUAD_STRIP);
@@ -137,9 +137,9 @@ static void cylinder(double x, double y, double z, double r,
         //Connects Center to Endpoint with GL_Quad_Strip:
         for(k = 0; k <= 360; k += d)
         {
-            glTexCoord2f(k, 1);
+            // glTexCoord2f(k, 1);
             glVertex3d(Cos(k), j, Sin(k) );
-            glTexCoord2f(0, -1);
+            // glTexCoord2f(0, -1);
             glVertex3d(0, j, 0);
        
         }
@@ -164,7 +164,8 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
    //  Offset and scale
    glTranslated(x,y,z);
    glScaled(r,r,r);
-   glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
+   // glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
+   glColor3f(0, 1, 1);
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {

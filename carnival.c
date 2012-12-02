@@ -25,8 +25,8 @@ void initialize(){
    globals.th=0;         //  Azimuth of view angle
    globals.ph=0;         //  Elevation of view angle
    globals.fov=55;       //  Field of view (for perspective)
-   globals.num_lights=1;
-   globals.spokes = 6;
+   globals.num_lights=0;
+   globals.spokes = 5;
    globals.asp=1;     //  Aspect ratio
    globals.dim=7.0;   //  Size of world
    globals.rotation = 0;
@@ -50,7 +50,7 @@ void initialize(){
 
 }
 // Textures
-unsigned int texture[4];
+unsigned int texture[5];
 
 
 //  Macro for sin & cos in degrees
@@ -464,28 +464,32 @@ static void tower(double x, double y, double z, double size)
    glColor3f(0.5,0.5,0.5);
    int speed = 5;
 
-   double height_osc = sin(globals.rotation*speed)*14;
+   double height_osc = -sin(globals.rotation*speed)*14;
 
    cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[1]);
 // cylinder(double x, double y, double z, double r,
 //                   double th, double thX, double thY, double thZ,
 //                   double thStart, double thEnd,
 //                   double dx, double dy, double dz, unsigned int texture)
+   double x_angle, z_angle, radius, offset2;
+   
+   x_angle = sin(globals.rotation*speed);
+   z_angle = cos(globals.rotation*speed);
+   
+   cylinder(0, height_osc + 14, 0, 1, globals.rotation*speed*20*pi, 0, globals.rotation*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
+   // cylinder(0, height_osc + 14, 0, 1, x_angle*180, 0, 0, 0, 0, 360, 4, 1, 4, texture[2]);
 
-   cylinder(0, height_osc + 14, 0, 1, 0, 0, 0, 0, 0, 360, 4, 1, 4, texture[3]);
-
-   for (i=0;i<num_spokes*2;i++)
-   {
-      if(globals.num_lights){
+   if(globals.num_lights){
+      for (i=0;i<num_spokes*2;i++)
+      {
          int spacing;
-         double x_angle, z_angle, radius, offset2;
      
          offset2 = i*pi/num_spokes;
+         x_angle = sin(offset2 + globals.rotation*speed);
+         z_angle = cos(offset2 + globals.rotation*speed);
          for(spacing = 1; spacing < globals.num_lights+1; spacing++)
          {
             radius = spacing*r/globals.num_lights - 0.1;
-            x_angle = sin(offset2 + globals.rotation*speed);
-            z_angle = cos(offset2 + globals.rotation*speed);
 
             light(radius*x_angle, height_osc + 13, radius*z_angle, 0.1, 0, 360);
             light(radius*x_angle, height_osc + 15, radius*z_angle, 0.1, 0, 360);
@@ -795,6 +799,7 @@ int main(int argc,char* argv[])
    texture[1] = LoadTexBMP("textures/metal1.bmp");
    texture[2] = LoadTexBMP("textures/face.bmp");
    texture[3] = LoadTexBMP("textures/grass.bmp");
+   texture[4] = LoadTexBMP("textures/glass.bmp");
    //  Pass control to GLUT so it can interact with the user
    ErrCheck("init");
    glutMainLoop();

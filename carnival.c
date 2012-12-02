@@ -503,7 +503,6 @@ static void tower(double x, double y, double z, double size)
 
 static void circular_tent(double x, double y, double z, double size)
 {
-   double pi = 3.14159265358979323846;
    //  Draw passenger_boxes
    glPushMatrix();
    glTranslated(x,y,z);
@@ -512,7 +511,7 @@ static void circular_tent(double x, double y, double z, double size)
    // Draw the globals.spokes
    glColor3f(0.5,0.5,0.5);
 
-   cone(0, 1.5, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[1]);
+   cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[1]);
 // cylinder(double x, double y, double z, double r,
 //                   double th, double thX, double thY, double thZ,
 //                   double thStart, double thEnd,

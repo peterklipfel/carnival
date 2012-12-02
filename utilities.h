@@ -159,11 +159,8 @@ static void cone(double x, double y, double z, double r,
                      double dx, double dy, double dz, unsigned int texture)
 {
    
-    const int d = 5;
-    //int th,ph;
-   
     //Indexes:
-    int i, k;
+    int k;
  
     //  Save transformation
     glPushMatrix();

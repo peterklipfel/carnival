@@ -178,11 +178,12 @@ static void cone(double x, double y, double z, double r,
 
    glBegin(GL_TRIANGLES);
     for (k=0;k<=360;k+=5){
-      glColor3f(0.0,0.0,1.0);
+      glNormal3d(Cos(k), Sin(k), 0);
+      glTexCoord2f(k/22.5, 1);
       glVertex3f(0,0,1);
-      glColor3f(0.0,1.0,1.0);
+      glTexCoord2f(k/22.5, 0);
       glVertex3f(Cos(k),Sin(k),0);
-      glColor3f(1.0,0.0,0.0);
+      glTexCoord2f(k/22.5, -1);
       glVertex3f(Cos(k+5),Sin(k+5),0);
     }
     glEnd();
@@ -192,11 +193,9 @@ static void cone(double x, double y, double z, double r,
     glRotated(90,1,0,0);
     glBegin(GL_TRIANGLES);
     for (k=0;k<=360;k+=5) {
-      glColor3f(1.0,0.0,0.0);
+      glColor3f(0.0,0.0,0.0);
       glVertex3f(0,0,0);
-      glColor3f(1.0,0.0,1.0);
       glVertex3f(Cos(k),0,Sin(k));
-      glColor3f(1.0,1.0,0.0);
       glVertex3f(Cos(k+5),0,Sin(k+5));
     }
     glEnd();

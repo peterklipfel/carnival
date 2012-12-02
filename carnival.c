@@ -501,7 +501,7 @@ static void tower(double x, double y, double z, double size)
    glPopMatrix();
 }
 
-static void circular_tent(double x, double y, double z, double size)
+static void hut(double x, double y, double z, double size)
 {
    //  Draw passenger_boxes
    glPushMatrix();
@@ -511,14 +511,14 @@ static void circular_tent(double x, double y, double z, double size)
    // Draw the globals.spokes
    glColor3f(0.5,0.5,0.5);
 
-   cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[1]);
+   cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[2]);
 // cylinder(double x, double y, double z, double r,
 //                   double th, double thX, double thY, double thZ,
 //                   double thStart, double thEnd,
 //                   double dx, double dy, double dz, unsigned int texture)
 
    
-   cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 360, 1, 0.7, 1, texture[4]);
+   cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 310, 1, 0.7, 1, texture[4]);
 
    glPopMatrix();
 }
@@ -614,7 +614,16 @@ void display()
 
    tower(0, -1, -20, 0.75);
 
-   circular_tent(0, 0, 0, 1);
+   hut(30, 0, 10, 1);
+   hut(-10, 0, 10, 1);
+   hut(-30, 0, -15, 1);
+   hut(-10, 0, -26, 1);
+   
+   hut(13, 0, -6, 1);
+   hut(6, 0, 18, 1);
+   hut(1, 0, -6, 1);
+   hut(-17, 0, 20, 1);
+
    //  Draw globals.axes
    glColor3f(1,1,1);
    if (globals.axes)

@@ -199,40 +199,6 @@ static void cone(double x, double y, double z, double r,
       glVertex3f(Cos(k+5),0,Sin(k+5));
     }
     glEnd();
-
-    //Sides:
-    // for (i = thStart; i <= thEnd; i += 1)
-    // {
-
-    //     //Set Normal Vector:
-    //     glNormal3d(Cos(i), 0, Sin(i));
-             
-    //     //Set Coordinates:
-    //     glTexCoord2f(i/22.5, 1);
-    //     glVertex3d(Cos(i), +1, Sin(i));
-    //     glTexCoord2f(i/22.5, -1);
-    //     glVertex3d(Cos(i), -1, Sin(i));
-    // }
-
-    // glEnd();
-
-    //Makes the Top and Bottoms of the Cylinder:
-    // glColor3f(0,0,0);
-    
-    // glBegin(GL_QUAD_STRIP);
-    // glNormal3d(0, 1, 0);
-
-    //Connects Center to Endpoint with GL_Quad_Strip:
-    // for(k = 0; k <= 360; k += d)
-    // {
-    //     // glTexCoord2f(k, 1);
-    //     glVertex3d(Cos(k), -1, Sin(k) );
-    //     // glTexCoord2f(0, -1);
-    //     glVertex3d(0, -1, 0);
-   
-    // }
-
-    // glEnd();
    
    
     //Restores Previous:
@@ -250,8 +216,8 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
    //  Offset and scale
    glTranslated(x,y,z);
    glScaled(r,r,r);
-   // glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
-   glColor3f(0, 1, 1);
+   glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
+   // glColor3f(1, 1, 1);
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {

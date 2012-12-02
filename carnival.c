@@ -388,7 +388,7 @@ static void ferris_wheel(double x, double y , double z, double size)
 }
 
 static void scrambler(double x, double y , double z, double size) {
-   int num_spokes = 4;
+   int num_spokes = globals.spokes;
    double pi = 3.14159265358979323846;
    double step = pi/num_spokes;
    double r = 4;
@@ -403,6 +403,7 @@ static void scrambler(double x, double y , double z, double size) {
    double conversion = 180/pi;
    int current_spoke;
    int speed = 15;
+   double spin = globals.rotation*speed;
    double offset = 0;
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
@@ -412,8 +413,8 @@ static void scrambler(double x, double y , double z, double size) {
    for (i=0;i<num_spokes*2;i++)
    {
       glColor3f(1,1,1);
-      double passenger_box_x = r * sin(i*step+globals.rotation*speed);
-      double passenger_box_z = r * cos(i*step+globals.rotation*speed);
+      double passenger_box_x = r * sin(i*step+spin);
+      double passenger_box_z = r * cos(i*step+spin);
       passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0);
       beam(passenger_box_x,2.2,passenger_box_z, 0.05, .4, 0.05, 90, 0, 0, 1);
 
@@ -433,8 +434,8 @@ static void scrambler(double x, double y , double z, double size) {
          for(spacing = 1; spacing < globals.num_lights+1; spacing++)
          {
             radius = spacing*r/globals.num_lights - 0.1;
-            x_angle = sin(offset2 + globals.rotation*speed);
-            z_angle = cos(offset2 + globals.rotation*speed);
+            x_angle = sin(offset2 + spin);
+            z_angle = cos(offset2 + spin);
 
             light(radius*x_angle, 2.9, radius*z_angle, 0.1, 0, 360);
          }
@@ -472,12 +473,12 @@ static void tower(double x, double y, double z, double size)
 //                   double th, double thX, double thY, double thZ,
 //                   double thStart, double thEnd,
 //                   double dx, double dy, double dz, unsigned int texture)
-   double x_angle, z_angle, radius, offset2;
-   
+   double x_angle, z_angle, radius, offset2, spin;
+   spin = globals.rotation*speed;
    x_angle = sin(globals.rotation*speed);
    z_angle = cos(globals.rotation*speed);
    
-   cylinder(0, height_osc + 14, 0, 1, globals.rotation*speed*20*pi, 0, globals.rotation*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
+   cylinder(0, height_osc + 14, 0, 1, spin*20*pi, 0, spin*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
    // cylinder(0, height_osc + 14, 0, 1, x_angle*180, 0, 0, 0, 0, 360, 4, 1, 4, texture[2]);
 
    if(globals.num_lights){
@@ -486,8 +487,8 @@ static void tower(double x, double y, double z, double size)
          int spacing;
      
          offset2 = i*pi/num_spokes;
-         x_angle = sin(offset2 + globals.rotation*speed);
-         z_angle = cos(offset2 + globals.rotation*speed);
+         x_angle = sin(offset2 + spin);
+         z_angle = cos(offset2 + spin);
          for(spacing = 1; spacing < globals.num_lights+1; spacing++)
          {
             radius = spacing*r/globals.num_lights - 0.1;

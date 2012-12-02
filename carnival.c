@@ -256,7 +256,7 @@ static void passenger_box(double x,double y,double z,
    glTranslated(x,y,z);
    glRotated(th,0,1,0);
    glScaled(dx,dy,dz);
-   person(0, +1.5, 0, 0.5, 0.5);
+   person(0, +1.5, 0, 0.3, 0.5);
    // Textures
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
@@ -465,6 +465,7 @@ static void tower(double x, double y, double z, double size)
    int speed = 5;
 
    double height_osc = -sin(globals.rotation*speed)*14;
+   height_osc = height_osc < -13 ? -13 : height_osc;
 
    cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[1]);
 // cylinder(double x, double y, double z, double r,
@@ -580,7 +581,7 @@ void display()
    sky(-1,-1,-1,40, 90, 270);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
-   tower(0, -1, 0, 0.5);
+   tower(0, -1, -20, 0.75);
    //  Draw globals.axes
    glColor3f(1,1,1);
    if (globals.axes)

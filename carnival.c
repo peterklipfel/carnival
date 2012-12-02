@@ -501,8 +501,31 @@ static void tower(double x, double y, double z, double size)
    glPopMatrix();
 }
 
+static void circular_tent(double x, double y, double z, double size)
+{
+   double pi = 3.14159265358979323846;
+   //  Draw passenger_boxes
+   glPushMatrix();
+   glTranslated(x,y,z);
+   glScaled(size,size,size);
+
+   // Draw the globals.spokes
+   glColor3f(0.5,0.5,0.5);
+
+   cone(0, 1.5, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[1]);
+// cylinder(double x, double y, double z, double r,
+//                   double th, double thX, double thY, double thZ,
+//                   double thStart, double thEnd,
+//                   double dx, double dy, double dz, unsigned int texture)
+
+   
+   cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 360, 1, 0.7, 1, texture[4]);
+
+   glPopMatrix();
+}
 
 static void draw_lamp(){
+   glShadeModel(GL_SMOOTH);
       //  Translate intensity to color vectors
    float Ambient[]   = {0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,0.01*lighting_struct.ambient ,1.0};
    float Diffuse[]   = {0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,0.01*lighting_struct.diffuse ,1.0};
@@ -510,7 +533,7 @@ static void draw_lamp(){
    //  Light position
    float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
    //  Draw light position as ball (still no lighting here)
-   glColor3f(1,1,1);
+   glColor3f(0,0,0);
    ball(Position[0],Position[1],Position[2] , 0.1);
    //  OpenGL should normalize normal vectors
    glEnable(GL_NORMALIZE);
@@ -518,6 +541,8 @@ static void draw_lamp(){
    glEnable(GL_LIGHTING);
    //  Location of viewer for lighting_struct.specular calculations
    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
+   //  Two sided mode
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,0);
    //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
    glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
    glEnable(GL_COLOR_MATERIAL);
@@ -528,6 +553,13 @@ static void draw_lamp(){
    glLightfv(GL_LIGHT0,GL_DIFFUSE ,Diffuse);
    glLightfv(GL_LIGHT0,GL_SPECULAR,Specular);
    glLightfv(GL_LIGHT0,GL_POSITION,Position);
+   //  Set spotlight parameters
+   glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180);
+   glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,0);
+   //  Set attenuation
+   glLightf(GL_LIGHT0,GL_CONSTANT_ATTENUATION ,2.0);
+   glLightf(GL_LIGHT0,GL_LINEAR_ATTENUATION   ,0.0);
+   glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION,0.0);
 }
 
 /*
@@ -582,6 +614,8 @@ void display()
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
    tower(0, -1, -20, 0.75);
+
+   circular_tent(0, 0, 0, 1);
    //  Draw globals.axes
    glColor3f(1,1,1);
    if (globals.axes)

@@ -95,7 +95,7 @@ static void cylinder(double x, double y, double z, double r,
     //  Set texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glColor3f(1, 1, 1);
+    // glColor3f(1, 1, 1);
    
     //Begins Drawing:
     glBegin(GL_QUAD_STRIP);

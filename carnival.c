@@ -50,8 +50,8 @@ void initialize(){
 
 }
 // Textures
-unsigned int texture[5];
-
+unsigned int texture[20];
+int texture_num = 0;
 
 //  Macro for sin & cos in degrees
 // #define Cos(th) cos(3.1415927/180*(th))
@@ -76,13 +76,6 @@ void Print(const char* format , ...)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*ch++);
 }
 
-/*
- *  Draw a passenger_box
- *     at (x,y,z)
- *     dimentions (dx,dy,dz)
- *     rotated th about the y axis
- */
-
 static void outer_frame(double center_x, double center_y, 
                         double center_z, double r, 
                         double segments, double step)
@@ -104,7 +97,8 @@ static void outer_frame(double center_x, double center_y,
 
 static void beam(double x,double y,double z,
                  double dx,double dy,double dz,
-                 double th1, double th2, double ph, double ph2)
+                 double th1, double th2, double ph, double ph2,
+                 unsigned int texture)
 {
    float white[] = {1,1,1,1};
    float Emission[]  = {0.0,0.0,0.01*lighting_struct.emission,1.0};
@@ -121,8 +115,8 @@ static void beam(double x,double y,double z,
 
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-   glColor3f(1,1,1);
-   glBindTexture(GL_TEXTURE_2D,texture[1]);
+   // glColor3f(1,1,1);
+   glBindTexture(GL_TEXTURE_2D,texture);
 
    //  passenger_box
    glBegin(GL_QUADS);
@@ -242,7 +236,7 @@ static void person(double x, double y , double z, double r, double height)
 
 static void passenger_box(double x,double y,double z,
                  double dx,double dy,double dz,
-                 double th)
+                 double th, unsigned int texture)
 {
    //  Set lighting_struct.specular color to white
    float white[] = {1,1,1,1};
@@ -261,7 +255,7 @@ static void passenger_box(double x,double y,double z,
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
    glColor3f(1,1,1);
-   glBindTexture(GL_TEXTURE_2D,texture[0]);
+   glBindTexture(GL_TEXTURE_2D,texture);
    //  passenger_box
    // ball(0, +1.5, 0, 0.5);
    //  Front
@@ -329,7 +323,7 @@ static void ferris_wheel(double x, double y , double z, double size)
    {
       double passenger_box_x = r * cos(i*step+globals.rotation);
       double passenger_box_y = r * sin(i*step+globals.rotation);
-      passenger_box(passenger_box_x, passenger_box_y,0 , 0.3,0.3,0.3 , 0);
+      passenger_box(passenger_box_x, passenger_box_y,0 , 0.3,0.3,0.3 , 0, texture[7]);
    }
 
    // Draw Circle
@@ -346,21 +340,22 @@ static void ferris_wheel(double x, double y , double z, double size)
    double offset = 0;
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
+      glColor3f(0.8,0.8,0.8);
       offset = current_spoke*(180/num_spokes);
-      beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1);
-      beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1);
+      beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1, texture[9]);
+      beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1, texture[9]);
    }
 
    // center axis
-   glColor3f(0.2,0.5,0.2);
-   beam(0,0,0, 1, 0.1, 0.1, 90, 0, 0, 1);
+   glColor3f(0.5,0.5,0.5);
+   beam(0,0,0, 1, 0.1, 0.1, 90, 0, 0, 1, texture[7]);
 
    // braces
-   glColor3f(0.2,0.2,0.5);
-   beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0, 1);
-   beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0, 1);
-   beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0, 1);
-   beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0, 1);
+   glColor3f(0.5,0.5,0.5);
+   beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0, 1, texture[7]);
+   beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0, 1, texture[7]);
+   beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0, 1, texture[7]);
+   beam(-1.7,-1.7,1, 2.5, 0.1, 0.1, 45, 45, 0, 1, texture[7]);
 
 
    if(globals.num_lights){
@@ -388,7 +383,7 @@ static void ferris_wheel(double x, double y , double z, double size)
 }
 
 static void scrambler(double x, double y , double z, double size) {
-   int num_spokes = globals.spokes;
+   int num_spokes = globals.spokes % 2 ? globals.spokes + 1 : globals.spokes;
    double pi = 3.14159265358979323846;
    double step = pi/num_spokes;
    double r = 4;
@@ -408,23 +403,23 @@ static void scrambler(double x, double y , double z, double size) {
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
       offset = current_spoke*(180/num_spokes);
-      beam(0,2.75,0, 4, 0.15, 0.15,offset + speed*conversion*globals.rotation, 0, 0, 90);
+      beam(0,2.75,0, 4, 0.15, 0.15,offset + conversion*spin, 0, 0, 90, texture[0]);
    }
    for (i=0;i<num_spokes*2;i++)
    {
       glColor3f(1,1,1);
       double passenger_box_x = r * sin(i*step+spin);
       double passenger_box_z = r * cos(i*step+spin);
-      passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0);
-      beam(passenger_box_x,2.2,passenger_box_z, 0.05, .4, 0.05, 90, 0, 0, 1);
+      passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0, texture[5]);
+      beam(passenger_box_x,2.2,passenger_box_z, 0.05, .4, 0.05, 90, 0, 0, 1, texture[1]);
 
-      beam(passenger_box_x-0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1);
-      beam(passenger_box_x+0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1);
-      beam(passenger_box_x,1.4,passenger_box_z-0.3, 0.01, .4, 0.01, 90, 0, 0, 1);
-      beam(passenger_box_x,1.4,passenger_box_z+0.3, 0.01, .4, 0.01, 90, 0, 0, 1);
+      beam(passenger_box_x-0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1, texture[1]);
+      beam(passenger_box_x+0.3,1.4,passenger_box_z, 0.01, .4, 0.01, 90, 0, 0, 1, texture[1]);
+      beam(passenger_box_x,1.4,passenger_box_z-0.3, 0.01, .4, 0.01, 90, 0, 0, 1, texture[1]);
+      beam(passenger_box_x,1.4,passenger_box_z+0.3, 0.01, .4, 0.01, 90, 0, 0, 1, texture[1]);
     
-      beam(passenger_box_x,1.9,passenger_box_z, 0.4, 0.05, 0.05, 90, 0, 0, 1);
-      beam(passenger_box_x,1.9,passenger_box_z, 0.05, 0.05, 0.4, 90, 0, 0, 1);
+      beam(passenger_box_x,1.9,passenger_box_z, 0.4, 0.05, 0.05, 90, 0, 0, 1, texture[1]);
+      beam(passenger_box_x,1.9,passenger_box_z, 0.05, 0.05, 0.4, 90, 0, 0, 1, texture[1]);
 
       if(globals.num_lights){
          int spacing;
@@ -443,9 +438,9 @@ static void scrambler(double x, double y , double z, double size) {
    }
 
    // center axis
-   glColor3f(0.2,0.5,0.2);
-   beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1);
-   beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90);
+   glColor3f(1,1,1);
+   beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1, texture[5]);
+   beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90, texture[1]);
 
    glPopMatrix();
 }
@@ -468,16 +463,14 @@ static void tower(double x, double y, double z, double size)
    double height_osc = -sin(globals.rotation*speed)*14;
    height_osc = height_osc < -13 ? -13 : height_osc;
 
-   cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[1]);
-// cylinder(double x, double y, double z, double r,
-//                   double th, double thX, double thY, double thZ,
-//                   double thStart, double thEnd,
-//                   double dx, double dy, double dz, unsigned int texture)
+   glColor3f(1, 1, 1);
+   cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[11]);
    double x_angle, z_angle, radius, offset2, spin;
    spin = globals.rotation*speed;
    x_angle = sin(globals.rotation*speed);
    z_angle = cos(globals.rotation*speed);
    
+   glColor3f(1, 1, 1);
    cylinder(0, height_osc + 14, 0, 1, spin*20*pi, 0, spin*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
    // cylinder(0, height_osc + 14, 0, 1, x_angle*180, 0, 0, 0, 0, 360, 4, 1, 4, texture[2]);
 
@@ -504,13 +497,11 @@ static void tower(double x, double y, double z, double size)
 
 static void hut(double x, double y, double z, double size)
 {
-   //  Draw passenger_boxes
    glPushMatrix();
    glTranslated(x,y,z);
    glScaled(size,size,size);
 
-   // Draw the globals.spokes
-   glColor3f(0.5,0.5,0.5);
+   glColor3f(1,1,1);
 
    cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[2]);
 // cylinder(double x, double y, double z, double r,
@@ -518,8 +509,8 @@ static void hut(double x, double y, double z, double size)
 //                   double thStart, double thEnd,
 //                   double dx, double dy, double dz, unsigned int texture)
 
-   
-   cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 310, 1, 0.7, 1, texture[4]);
+   glColor3f(1,1,1);
+   cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 310, 1, 0.7, 1, texture[10]);
 
    glPopMatrix();
 }
@@ -608,6 +599,7 @@ void display()
    ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
    scrambler(scrambler1x/damping, 0, 5, 1);
+   // scrambler(0, 0, 0, 1);
    scrambler(scrambler2x/damping, 0, 15, 1);
 
    sky(-1,-1,-1,40, 90, 270);
@@ -785,6 +777,10 @@ void key(unsigned char ch,int x,int y)
       lighting_struct.shininess -= 1;
    else if (ch=='N' && lighting_struct.shininess<7)
       lighting_struct.shininess += 1;
+   else if (ch=='q')
+      texture_num = (texture_num+1) % 12;
+   else if (ch=='Q')
+      texture_num = ((texture_num < 0 ? -texture_num : texture_num) - 1)%12;
    //  Translate lighting_struct.shininess power to value (-1 => 0)
    lighting_struct.shinyvec[0] = lighting_struct.shininess<0 ? 0 : pow(2.0,lighting_struct.shininess);
 
@@ -844,6 +840,13 @@ int main(int argc,char* argv[])
    texture[2] = LoadTexBMP("textures/face.bmp");
    texture[3] = LoadTexBMP("textures/grass.bmp");
    texture[4] = LoadTexBMP("textures/glass.bmp");
+   texture[5] = LoadTexBMP("textures/hazard.bmp");
+   texture[6] = LoadTexBMP("textures/faded.bmp");
+   texture[7] = LoadTexBMP("textures/rwStripe.bmp");
+   texture[8] = LoadTexBMP("textures/trippy.bmp");
+   texture[9] = LoadTexBMP("textures/fabric/1.bmp");
+   texture[10] = LoadTexBMP("textures/wood/2.bmp");
+   texture[11] = LoadTexBMP("textures/rwStripe2.bmp");
    //  Pass control to GLUT so it can interact with the user
    ErrCheck("init");
    glutMainLoop();

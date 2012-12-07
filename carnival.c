@@ -54,8 +54,8 @@ unsigned int texture[20];
 int texture_num = 0;
 
 //shadows
-#define Dfloor  8
-#define Yfloor -1
+#define Dfloor  40
+#define Yfloor -0.95
 float N[] = {0, -1, 0}; // Normal vector for the plane
 float E[] = {0, Yfloor, 0 }; // Point of the plane
 
@@ -621,7 +621,7 @@ void display()
    float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
 
    //  Erase the window and the depth buffer
-   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
    //  Enable Z-buffering in OpenGL
    glEnable(GL_DEPTH_TEST);
    //  Undo previous transformations
@@ -651,19 +651,47 @@ void display()
    //shadows
    glPushAttrib(GL_ENABLE_BIT);
    glDisable(GL_LIGHTING);
-   //  Blended color
-   glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-   glColor4f(0,0,0,0.4);
+   //  Enable stencil operations
+   glEnable(GL_STENCIL_TEST);
+
+   /*
+    *  Step 1:  Set stencil buffer to 1 where there are shadows
+    */
+   //  Existing value of stencil buffer doesn't matter
+   glStencilFunc(GL_ALWAYS,1,0xFFFFFFFF);
+   //  Set the value to 1 (REF=1 in StencilFunc)
+   //  only if Z-buffer would allow write
+   glStencilOp(GL_KEEP,GL_KEEP,GL_REPLACE);
+   //  Make Z-buffer and color buffer read-only
+   glDepthMask(0);
+   glColorMask(0,0,0,0);
    //  Draw flattened scene
-   
-   glDisable(GL_POLYGON_OFFSET_FILL);
-   glDisable(GL_TEXTURE_2D);
    glPushMatrix();
-   glColor3f(0,0,0);
    ShadowProjection(Position,E,N);
    scene();
    glPopMatrix();
+   //  Make Z-buffer and color buffer read-write
+   glDepthMask(1);
+   glColorMask(1,1,1,1);
+
+   /*
+    *  Step 2:  Draw shadow masked by stencil buffer
+    */
+   //  Set the stencil test draw where stencil buffer is > 0
+   glStencilFunc(GL_LESS,0,0xFFFFFFFF);
+   //  Make the stencil buffer read-only
+   glStencilOp(GL_KEEP,GL_KEEP,GL_KEEP);
+   //  Enable blending
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+   glColor4f(0,0,0,0.5);
+   //  Draw the shadow over the entire floor
+   glBegin(GL_QUADS);
+   glVertex3f(-Dfloor,Yfloor,-Dfloor);
+   glVertex3f(+Dfloor,Yfloor,-Dfloor);
+   glVertex3f(+Dfloor,Yfloor,+Dfloor);
+   glVertex3f(-Dfloor,Yfloor,+Dfloor);
+   glEnd();
    glPopAttrib();
 
    //  Draw globals.axes

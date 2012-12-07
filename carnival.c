@@ -25,7 +25,7 @@ void initialize(){
    globals.th=0;         //  Azimuth of view angle
    globals.ph=0;         //  Elevation of view angle
    globals.fov=55;       //  Field of view (for perspective)
-   globals.num_lights=0;
+   globals.num_lights=1;
    globals.spokes = 5;
    globals.asp=1;     //  Aspect ratio
    globals.dim=7.0;   //  Size of world

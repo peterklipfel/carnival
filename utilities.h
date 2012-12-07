@@ -208,7 +208,7 @@ static void cone(double x, double y, double z, double r,
 
 static void light(double x,double y,double z,double r, double start_angle, double end_angle)
 {
-   const int d=5;
+   const int d=60;
    int th,ph;
 
    //  Save transformation

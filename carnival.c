@@ -53,6 +53,13 @@ void initialize(){
 unsigned int texture[20];
 int texture_num = 0;
 
+//shadows
+#define Dfloor  8
+#define Yfloor -1
+float N[] = {0, -1, 0}; // Normal vector for the plane
+float E[] = {0, Yfloor, 0 }; // Point of the plane
+
+
 //  Macro for sin & cos in degrees
 // #define Cos(th) cos(3.1415927/180*(th))
 // #define Sin(th) sin(3.1415927/180*(th))
@@ -75,6 +82,22 @@ void Print(const char* format , ...)
    while (*ch)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*ch++);
 }
+
+void ShadowProjection(float L[4], float E[4], float N[4])
+{
+   float mat[16];
+   float e = E[0]*N[0] + E[1]*N[1] + E[2]*N[2];
+   float l = L[0]*N[0] + L[1]*N[1] + L[2]*N[2];
+   float c = e - l;
+   //  Create the matrix.
+   mat[0] = N[0]*L[0]+c; mat[4] = N[1]*L[0];   mat[8]  = N[2]*L[0];   mat[12] = -e*L[0];
+   mat[1] = N[0]*L[1];   mat[5] = N[1]*L[1]+c; mat[9]  = N[2]*L[1];   mat[13] = -e*L[1];
+   mat[2] = N[0]*L[2];   mat[6] = N[1]*L[2];   mat[10] = N[2]*L[2]+c; mat[14] = -e*L[2];
+   mat[3] = N[0];        mat[7] = N[1];        mat[11] = N[2];        mat[15] = -l;
+   //  Multiply modelview matrix
+   glMultMatrixf(mat);
+}
+
 
 static void outer_frame(double center_x, double center_y, 
                         double center_z, double r, 
@@ -553,12 +576,50 @@ static void draw_lamp(){
    glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION,0.0);
 }
 
+void scene()
+{
+   int damping = 10;
+   double ferris1x = damping*10;
+   double ferris2x = damping*-15;
+   double scrambler1x = damping*19;
+   double scrambler2x = damping*-14;
+   if (globals.earthquake)
+   {
+      ferris1x = ferris1x+sin(500*globals.rotation);
+      ferris2x = ferris2x+cos(630*globals.rotation);
+
+      scrambler1x = scrambler1x+sin(520*globals.rotation);
+      scrambler2x = scrambler2x+sin(604*globals.rotation);
+   }
+
+   ferris_wheel(ferris1x/damping, 2.4, -20, 1);
+   ferris_wheel(ferris2x/damping, 2.4, 0, 1);
+
+   scrambler(scrambler1x/damping, 0, 5, 1);
+   // scrambler(0, 0, 0, 1);
+   scrambler(scrambler2x/damping, 0, 15, 1);
+
+   tower(0, -1, -20, 0.75);
+
+   hut(30, 0, 10, 1);
+   hut(-10, 0, 10, 1);
+   hut(-30, 0, -15, 1);
+   hut(-10, 0, -26, 1);
+   
+   hut(13, 0, -6, 1);
+   hut(6, 0, 18, 1);
+   hut(1, 0, -6, 1);
+   hut(-17, 0, 20, 1);
+}
+
 /*
  *  OpenGL (GLUT) calls this routine to display the scene
  */
 void display()
 {
    const double len=1.5;  //  Length of globals.axes
+   float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
+
    //  Erase the window and the depth buffer
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
    //  Enable Z-buffering in OpenGL
@@ -581,41 +642,29 @@ void display()
    }
    else
      glDisable(GL_LIGHTING);
-   int damping = 10;
-   double ferris1x = damping*10;
-   double ferris2x = damping*-15;
-   double scrambler1x = damping*19;
-   double scrambler2x = damping*-14;
-   if (globals.earthquake)
-   {
-      ferris1x = ferris1x+sin(500*globals.rotation);
-      ferris2x = ferris2x+cos(630*globals.rotation);
-
-      scrambler1x = scrambler1x+sin(520*globals.rotation);
-      scrambler2x = scrambler2x+sin(604*globals.rotation);
-   }
-
-   ferris_wheel(ferris1x/damping, 2.4, -20, 1);
-   ferris_wheel(ferris2x/damping, 2.4, 0, 1);
-
-   scrambler(scrambler1x/damping, 0, 5, 1);
-   // scrambler(0, 0, 0, 1);
-   scrambler(scrambler2x/damping, 0, 15, 1);
 
    sky(-1,-1,-1,40, 90, 270);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
-   tower(0, -1, -20, 0.75);
+   scene();
 
-   hut(30, 0, 10, 1);
-   hut(-10, 0, 10, 1);
-   hut(-30, 0, -15, 1);
-   hut(-10, 0, -26, 1);
+   //shadows
+   glPushAttrib(GL_ENABLE_BIT);
+   glDisable(GL_LIGHTING);
+   //  Blended color
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+   glColor4f(0,0,0,0.4);
+   //  Draw flattened scene
    
-   hut(13, 0, -6, 1);
-   hut(6, 0, 18, 1);
-   hut(1, 0, -6, 1);
-   hut(-17, 0, 20, 1);
+   glDisable(GL_POLYGON_OFFSET_FILL);
+   glDisable(GL_TEXTURE_2D);
+   glPushMatrix();
+   glColor3f(0,0,0);
+   ShadowProjection(Position,E,N);
+   scene();
+   glPopMatrix();
+   glPopAttrib();
 
    //  Draw globals.axes
    glColor3f(1,1,1);

@@ -69,7 +69,7 @@ static void Vertex(double th,double ph)
    //  For a sphere at the origin, the position
    //  and normal vectors are the same
    glNormal3d(x,y,z);
-   glTexCoord2d((90-th)/360.0+90,ph/360.0+0.5);
+   glTexCoord2d(th/360.0,ph/360.0);
    glVertex3d(x,y,z);
 };
 
@@ -235,7 +235,7 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
 };
 
 static void sky(double x,double y,double z,double r, double start_angle, 
-                double end_angle)
+                double end_angle, unsigned int texture)
 {
    const int d=5;
    int th,ph;
@@ -245,12 +245,17 @@ static void sky(double x,double y,double z,double r, double start_angle,
    //  Offset and scale
    glTranslated(x,y,z);
    glScaled(r,r,r);
-   glColor3f(0, .75, 1);
+   glRotated(90,90,0,0);
+   // glColor3f(0, .75, 1);
+   glColor3f(1, 1, 1);
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, texture);
+
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {
       glBegin(GL_QUAD_STRIP);
-      for (th=90;th<=270;th+=d)
+      for (th=0;th<=360;th+=d)
       {
          Vertex(th,ph);
          Vertex(th,ph+d);
@@ -259,6 +264,7 @@ static void sky(double x,double y,double z,double r, double start_angle,
    }
    //  Undo transformations
    glPopMatrix();
+   glDisable(GL_TEXTURE_2D);
 };
 
 #endif

@@ -28,7 +28,7 @@ void initialize(){
    globals.num_lights=8;
    globals.spokes = 5;
    globals.asp=1;     //  Aspect ratio
-   globals.dim=7.0;   //  Size of world
+   globals.dim=47.0;   //  Size of world
    globals.rotation = 0;
    globals.vel_division = 900000.0;
    globals.earthquake = 0;
@@ -36,7 +36,7 @@ void initialize(){
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
-   lighting_struct.distance  =   5;  // Light lighting_struct.distance
+   lighting_struct.distance  =   40;  // Light lighting_struct.distance
    lighting_struct.inc       =  10;  // Ball increment
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
@@ -505,7 +505,7 @@ static void hut(double x, double y, double z, double size)
 
    glColor3f(1,1,1);
 
-   cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[2]);
+   cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[0]);
 // cylinder(double x, double y, double z, double r,
 //                   double th, double thX, double thY, double thZ,
 //                   double thStart, double thEnd,
@@ -535,7 +535,7 @@ static void draw_lamp(){
    //  Location of viewer for lighting_struct.specular calculations
    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
    //  Two sided mode
-   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,0);
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,1);
    //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
    glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
    glEnable(GL_COLOR_MATERIAL);
@@ -575,8 +575,8 @@ void scene()
    ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
    scrambler(scrambler1x/damping, 0, 5, 1);
-   scrambler(0, 0, 0, 1);
-   // scrambler(scrambler2x/damping, 0, 15, 1);
+   // scrambler(0, 0, 0, 1);
+   scrambler(scrambler2x/damping, 0, 15, 1);
 
    tower(0, -1, -20, 0.75);
 
@@ -624,7 +624,7 @@ void display()
    else
      glDisable(GL_LIGHTING);
 
-   sky(-1,-1,-1,40, 90, 270);
+   sky(-1,-1,-1,40, 90, 270, texture[2]);
    ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
 
    scene();
@@ -899,7 +899,7 @@ int main(int argc,char* argv[])
    objs[0] = LoadOBJ("objects/face.obj");
    texture[0] = LoadTexBMP("textures/crate.bmp");
    texture[1] = LoadTexBMP("textures/metal1.bmp");
-   texture[2] = LoadTexBMP("textures/face.bmp");
+   texture[2] = LoadTexBMP("textures/night.bmp");
    texture[3] = LoadTexBMP("textures/grass.bmp");
    texture[4] = LoadTexBMP("textures/glass.bmp");
    texture[5] = LoadTexBMP("textures/hazard.bmp");

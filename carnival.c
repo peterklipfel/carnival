@@ -25,13 +25,14 @@ void initialize(){
    globals.th=0;         //  Azimuth of view angle
    globals.ph=0;         //  Elevation of view angle
    globals.fov=55;       //  Field of view (for perspective)
-   globals.num_lights=1;
+   globals.num_lights=8;
    globals.spokes = 5;
    globals.asp=1;     //  Aspect ratio
    globals.dim=7.0;   //  Size of world
    globals.rotation = 0;
    globals.vel_division = 900000.0;
    globals.earthquake = 0;
+   globals.people = 0;
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
@@ -52,10 +53,11 @@ void initialize(){
 // Textures
 unsigned int texture[20];
 int texture_num = 0;
+int objs[1];
 
 //shadows
 #define Dfloor  40
-#define Yfloor -0.95
+#define Yfloor -0.98
 float N[] = {0, -1, 0}; // Normal vector for the plane
 float E[] = {0, Yfloor, 0 }; // Point of the plane
 
@@ -223,37 +225,13 @@ static void ball(double x,double y,double z,double r)
 
 static void person(double x, double y , double z, double r, double height)
 {
-   ball(z, y, z, r);
-   height += 1; // no unused variable warning
-   // int h,ph;
-   // float yellow[] = {1.0,1.0,0.0,1.0};
-   // float Emission[]  = {0.0,0.0,0.01*lighting_struct.emission,1.0};
-   // //  Save transformation
-   // glPushMatrix();
-   // //  Offset, scale and rotate
-   // glTranslated(x,y,z);
-   // glScaled(r,r,r);
-   // //  White ball
-   // glMaterialfv(GL_FRONT,GL_SHININESS,lighting_struct.shinyvec);
-   // glMaterialfv(GL_FRONT,GL_SPECULAR,yellow);
-   // glMaterialfv(GL_FRONT,GL_EMISSION,Emission);
-   // //  Bands of latitude
-   // for (ph=-90;ph<90;ph+=lighting_struct.inc)
-   // {
-   //    glBegin(GL_QUAD_STRIP);
-   //    for (h = -height/2; h < height/2; h+=lighting_struct.inc)
-   //    {
-   //       glNormal3d(Cos(ph),Sin(ph),h);
-   //       glVertex3d(Cos(ph),Sin(ph),h);
-   //       glNormal3d(Cos(ph+lighting_struct.inc),Sin(ph+lighting_struct.inc),h+lighting_struct.inc);
-   //       glVertex3d(Cos(ph+lighting_struct.inc),Sin(ph+lighting_struct.inc),h+lighting_struct.inc);
-   //       // Vertex(th,ph);
-   //       // Vertex(th,ph+lighting_struct.inc);
-   //    }
-   //    glEnd();
-   // }
-   // //  Undo transofrmations
-   // glPopMatrix();
+   glColor3f(1,1,1);
+   glPushMatrix();
+   glTranslated(x,y,z);
+   glScaled(r,r,r);
+   glRotated(0,0,0,0);
+   glCallList(objs[0]);
+   glPopMatrix();
 
 }
 
@@ -273,7 +251,8 @@ static void passenger_box(double x,double y,double z,
    glTranslated(x,y,z);
    glRotated(th,0,1,0);
    glScaled(dx,dy,dz);
-   person(0, +1.5, 0, 0.3, 0.5);
+   if(globals.people)
+      person(0, -1, 0, 0.3, 0.5);
    // Textures
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
@@ -596,20 +575,22 @@ void scene()
    ferris_wheel(ferris2x/damping, 2.4, 0, 1);
 
    scrambler(scrambler1x/damping, 0, 5, 1);
-   // scrambler(0, 0, 0, 1);
-   scrambler(scrambler2x/damping, 0, 15, 1);
+   scrambler(0, 0, 0, 1);
+   // scrambler(scrambler2x/damping, 0, 15, 1);
 
    tower(0, -1, -20, 0.75);
 
-   hut(30, 0, 10, 1);
-   hut(-10, 0, 10, 1);
-   hut(-30, 0, -15, 1);
-   hut(-10, 0, -26, 1);
+   hut(30, -0.3, 10, 1);
+   hut(-10, -0.3, 10, 1);
+   hut(-30, -0.3, -15, 1);
+   hut(-10, -0.3, -26, 1);
    
-   hut(13, 0, -6, 1);
-   hut(6, 0, 18, 1);
-   hut(1, 0, -6, 1);
-   hut(-17, 0, 20, 1);
+   hut(13, -0.3, -6, 1);
+   hut(6, -0.3, 18, 1);
+   hut(1, -0.3, -6, 1);
+   hut(-17, -0.3, 20, 1);
+
+   person(0, 0 , 0, 1, 1);
 }
 
 /*
@@ -685,6 +666,7 @@ void display()
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
    glColor4f(0,0,0,0.5);
+   // glColor4f(sin(101*globals.rotation),sin(104*globals.rotation),cos(94*globals.rotation),0.5);
    //  Draw the shadow over the entire floor
    glBegin(GL_QUADS);
    glVertex3f(-Dfloor,Yfloor,-Dfloor);
@@ -778,7 +760,7 @@ void key(unsigned char ch,int x,int y)
       globals.th = globals.ph = 0;
       globals.fov=55;
       globals.num_lights=1;
-      globals.asp=1;     //  Aspect ratio
+      // globals.asp=1;     //  Aspect ratio
       globals.dim=5.0;
    }
    //  Toggle globals.axes
@@ -858,6 +840,8 @@ void key(unsigned char ch,int x,int y)
       texture_num = (texture_num+1) % 12;
    else if (ch=='Q')
       texture_num = ((texture_num < 0 ? -texture_num : texture_num) - 1)%12;
+   else if (ch=='p' || ch=='P')
+      globals.people = 1 - globals.people;
    //  Translate lighting_struct.shininess power to value (-1 => 0)
    lighting_struct.shinyvec[0] = lighting_struct.shininess<0 ? 0 : pow(2.0,lighting_struct.shininess);
 
@@ -912,6 +896,7 @@ int main(int argc,char* argv[])
    glutSpecialFunc(special);
    glutKeyboardFunc(key);
    glutIdleFunc(idle);
+   objs[0] = LoadOBJ("objects/face.obj");
    texture[0] = LoadTexBMP("textures/crate.bmp");
    texture[1] = LoadTexBMP("textures/metal1.bmp");
    texture[2] = LoadTexBMP("textures/face.bmp");

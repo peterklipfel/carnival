@@ -7,7 +7,8 @@ typedef struct {int lamp; int one; int distance; int inc; int smooth; int local;
        float shinyvec[1]; int zh; float ylight;} LightingStruct;
 
 typedef struct {int axes; int th; int ph; int fov; int num_lights; int spokes;
-        double asp; double dim; double rotation; double vel_division; int earthquake;} Globals;
+        double asp; double dim; double rotation; double vel_division; int earthquake;
+        int people;} Globals;
 
 
 static void ground(double x,  double y,  double z,

@@ -28,7 +28,7 @@ void initialize(){
    globals.num_lights=8;
    globals.spokes = 5;
    globals.asp=1;     //  Aspect ratio
-   globals.dim=47.0;   //  Size of world
+   globals.dim=15.0;   //  Size of world
    globals.rotation = 0;
    globals.vel_division = 900000.0;
    globals.earthquake = 0;
@@ -36,7 +36,7 @@ void initialize(){
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
-   lighting_struct.distance  =   40;  // Light lighting_struct.distance
+   lighting_struct.distance  =  40;  // Light lighting_struct.distance
    lighting_struct.inc       =  10;  // Ball increment
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
@@ -46,7 +46,7 @@ void initialize(){
    lighting_struct.specular  =   0;  // Specular intensity (%)
    lighting_struct.shininess =   0;  // Shininess (power of two)
    lighting_struct.zh        =  90;  // Light azimuth
-   lighting_struct.ylight  =   3;  // Elevation of light
+   lighting_struct.ylight    =   3;  // Elevation of light
 
 
 }
@@ -56,7 +56,7 @@ int texture_num = 0;
 int objs[1];
 
 //shadows
-#define Dfloor  40
+#define Dfloor  100
 #define Yfloor -0.98
 float N[] = {0, -1, 0}; // Normal vector for the plane
 float E[] = {0, Yfloor, 0 }; // Point of the plane
@@ -591,6 +591,7 @@ void scene()
    hut(-17, -0.3, 20, 1);
 
    person(0, 0 , 0, 1, 1);
+   glDisable(GL_LIGHTING);
 }
 
 /*
@@ -624,12 +625,13 @@ void display()
    else
      glDisable(GL_LIGHTING);
 
-   sky(-1,-1,-1,40, 90, 270, texture[2]);
-   ground(-1, -1, -1, 10, 0, 10, 0, 0, 0, 80, lighting_struct, texture[3]);
+   sky(-1,-1,-1,100, 90, 270, texture[2]);
+   ground(-1, -1, -1, 20, 0, 20, 0, 0, 0, 100, lighting_struct, texture[3]);
 
    scene();
 
    //shadows
+   glColor4f(0,0,0,0.5);
    glPushAttrib(GL_ENABLE_BIT);
    glDisable(GL_LIGHTING);
    //  Enable stencil operations
@@ -870,8 +872,8 @@ void idle()
    double t = glutGet(GLUT_ELAPSED_TIME)/globals.vel_division;
    double t2 = glutGet(GLUT_ELAPSED_TIME)/1000.0;
    //  Calculate spin angle 90 degrees/second
-   globals.rotation = fmod(90*t,360);
-   lighting_struct.zh = fmod(90*t2,360.0);
+   globals.rotation = fmod(90*t/3,360);
+   lighting_struct.zh = fmod(90*t2/3,360.0);
    //  Request display update
    glutPostRedisplay();
 }

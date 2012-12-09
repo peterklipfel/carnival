@@ -214,24 +214,42 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
 
    //  Save transformation
    glPushMatrix();
+   glDisable(GL_LIGHTING);
+   glDisable(GL_TEXTURE_2D);
    //  Offset and scale
    glTranslated(x,y,z);
    glScaled(r,r,r);
    glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
-   // glColor3f(1, 1, 1);
+   // glColor3f(0, 0, 0);
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {
       glBegin(GL_QUAD_STRIP);
       for (th=90;th<=270;th+=d)
       {
-         Vertex(th,ph);
-         Vertex(th,ph+d);
+        //inlined the vertext function
+        double x = Sin(th)*Cos(ph);
+        double y = Cos(th)*Cos(ph);
+        double z =         Sin(ph);
+        //  For a sphere at the origin, the position
+        //  and normal vectors are the same
+        glNormal3d(x,y,z);
+        // glTexCoord2d((90-th)/h>h = 360.0+90,ph/360.0+0.5);
+        glVertex3d(x,y,z);
+        // Vertex(th,ph);
+        x = Sin(th)*Cos(ph+d);
+        y = Cos(th)*Cos(ph+d);
+        z =         Sin(ph+d);
+        // Vertex(th,ph+d);
+        glNormal3d(x,y,z);
+        // glTexCoord2d((90-th)/360.0+90,ph/360.0+0.5);
+        glVertex3d(x,y,z);
       }
       glEnd();
    }
    //  Undo transformations
    glPopMatrix();
+   glEnable(GL_LIGHTING);
 };
 
 static void sky(double x,double y,double z,double r, double start_angle, 

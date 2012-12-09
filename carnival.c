@@ -558,37 +558,45 @@ static void draw_lamp(){
 void scene()
 {
    int damping = 10;
-   double ferris1x = damping*10;
-   double ferris2x = damping*-15;
-   double scrambler1x = damping*19;
-   double scrambler2x = damping*-14;
+   double ferris1x = 10;
+   double ferris2x = -15;
+   double scrambler1x = 19;
+   double scrambler2x = -14;
+   double towerx = 0;
+   double hut_offset_1x = 0, hut_offset_2x = 0, hut_offset_3x = 0;
    if (globals.earthquake)
    {
-      ferris1x = ferris1x+sin(500*globals.rotation);
-      ferris2x = ferris2x+cos(630*globals.rotation);
+      ferris1x = ferris1x+sin(500*globals.rotation)/damping;
+      ferris2x = ferris2x+cos(630*globals.rotation)/damping;
 
-      scrambler1x = scrambler1x+sin(520*globals.rotation);
-      scrambler2x = scrambler2x+sin(604*globals.rotation);
+      scrambler1x = scrambler1x+sin(520*globals.rotation)/damping;
+      scrambler2x = scrambler2x+sin(604*globals.rotation)/damping;
+
+      towerx = towerx + sin(783*globals.rotation)/damping;
+  
+      hut_offset_1x = sin(845*globals.rotation)/damping; 
+      hut_offset_2x = cos(829*globals.rotation)/damping; 
+      hut_offset_3x = sin(892*globals.rotation)/damping;
    }
 
-   ferris_wheel(ferris1x/damping, 2.4, -20, 1);
-   ferris_wheel(ferris2x/damping, 2.4, 0, 1);
+   ferris_wheel(ferris1x, 2.4, -20, 1);
+   ferris_wheel(ferris2x, 2.4, 0, 1);
 
-   scrambler(scrambler1x/damping, 0, 5, 1);
+   scrambler(scrambler1x, 0, 5, 1);
    // scrambler(0, 0, 0, 1);
-   scrambler(scrambler2x/damping, 0, 15, 1);
+   scrambler(scrambler2x, 0, 15, 1);
 
-   tower(0, -1, -20, 0.75);
+   tower(towerx, -1, -20, 0.75);
 
-   hut(30, -0.3, 10, 1);
-   hut(-10, -0.3, 10, 1);
-   hut(-30, -0.3, -15, 1);
-   hut(-10, -0.3, -26, 1);
+   hut(hut_offset_1x + 30, -0.3, 10, 1);
+   hut(hut_offset_2x - 10, -0.3, 10, 1);
+   hut(hut_offset_1x - 30, -0.3, -15, 1);
+   hut(hut_offset_3x - 10, -0.3, -26, 1);
    
-   hut(13, -0.3, -6, 1);
-   hut(6, -0.3, 18, 1);
-   hut(1, -0.3, -6, 1);
-   hut(-17, -0.3, 20, 1);
+   hut(hut_offset_2x + 13, -0.3, -6, 1);
+   hut(hut_offset_2x + 6, -0.3, 18, 1);
+   hut(hut_offset_3x + 1, -0.3, -6, 1);
+   hut(hut_offset_3x - 17, -0.3, 20, 1);
 
    person(0, 80, 0, 1, 1);
    glDisable(GL_LIGHTING);

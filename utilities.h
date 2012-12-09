@@ -8,7 +8,7 @@ typedef struct {int lamp; int one; int distance; int inc; int smooth; int local;
 
 typedef struct {int axes; int th; int ph; int fov; int num_lights; int spokes;
         double asp; double dim; double rotation; double vel_division; int earthquake;
-        int people;} Globals;
+        int people; int mushroom;} Globals;
 
 
 static void ground(double x,  double y,  double z,
@@ -31,7 +31,7 @@ static void ground(double x,  double y,  double z,
 
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-   glColor3f(1,1,1);
+   // glColor3f(1,1,1);
    glBindTexture(GL_TEXTURE_2D,texture);
 
    //  passenger_box
@@ -174,7 +174,7 @@ static void cone(double x, double y, double z, double r,
     //  Set texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glColor3f(1, 1, 1);
+    // glColor3f(1, 1, 1);
    
 
    glBegin(GL_TRIANGLES);

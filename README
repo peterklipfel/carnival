@@ -15,8 +15,9 @@ page up    - increase the view size (zoom out)
 page down	 - decrease the view size (zoom in)
 g(or G)    - toggle axes
 r(or R)    - reset display 
-t(or T)    - toggle earthquake (tremble) mode
+t(or T)    - toggle earthquake (tremor) mode
 b(or B)	   - toggle lighting effects
+m(or M)    - toggle mushroom mode
 a          - decrease amient light
 A          - increase ambient light
 c          - decrease specularity

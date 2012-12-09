@@ -33,6 +33,7 @@ void initialize(){
    globals.vel_division = 900000.0;
    globals.earthquake = 0;
    globals.people = 0;
+   globals.mushroom = 0;
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
@@ -107,7 +108,11 @@ static void outer_frame(double center_x, double center_y,
 {
    int i;
    glBegin(GL_LINE_STRIP);
-   glColor3f(1.0, 0.7, 0.5);
+   if(globals.mushroom)
+      glColor3f(sin(305*globals.rotation),sin(842*globals.rotation),cos(94*globals.rotation));
+   else   
+      glColor3f(1.0, 0.7, 0.5);
+
       for (i=0;i<segments;i++)
       {
          double x = r * cos(i*step+globals.rotation);
@@ -256,7 +261,10 @@ static void passenger_box(double x,double y,double z,
    // Textures
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-   glColor3f(1,1,1);
+   if(globals.mushroom)
+      glColor3f(sin(305*globals.rotation),sin(242*globals.rotation),cos(94*globals.rotation));
+   else
+      glColor3f(1,1,1);
    glBindTexture(GL_TEXTURE_2D,texture);
    //  passenger_box
    // ball(0, +1.5, 0, 0.5);
@@ -333,27 +341,35 @@ static void ferris_wheel(double x, double y , double z, double size)
    outer_frame(0, 0, 0.31, r, 10, step);
 
 
-   // Draw the globals.spokes
-   glColor3f(0.5,0.5,0.5);
+   // Draw the spokes
    double conversion = 180/pi;
    int current_spoke;
    int num_spokes = globals.spokes;
 
    double offset = 0;
+   if(globals.mushroom)
+      glColor3f(sin(205*globals.rotation),sin(142*globals.rotation),cos(394*globals.rotation));
+   else
+      glColor3f(0.8,0.8,0.8);
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
-      glColor3f(0.8,0.8,0.8);
       offset = current_spoke*(180/num_spokes);
       beam(0,0,-0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1, texture[9]);
       beam(0,0,0.3, r-0.1, 0.1, 0.1,offset + conversion*globals.rotation, offset+conversion*globals.rotation, 0, 1, texture[9]);
    }
 
    // center axis
-   glColor3f(0.5,0.5,0.5);
+   if(globals.mushroom)
+      glColor3f(sin(305*globals.rotation),sin(242*globals.rotation),cos(594*globals.rotation));
+   else
+      glColor3f(0.5,0.5,0.5);
    beam(0,0,0, 1, 0.1, 0.1, 90, 0, 0, 1, texture[7]);
 
    // braces
-   glColor3f(0.5,0.5,0.5);
+   if(globals.mushroom)
+      glColor3f(sin(305*globals.rotation),sin(842*globals.rotation),cos(94*globals.rotation));
+   else
+      glColor3f(0.5,0.5,0.5);
    beam(1.7,-1.7,-1, 2.5, 0.1, 0.1, 135, 135, 0, 1, texture[7]);
    beam(-1.7,-1.7,-1, 2.5, 0.1, 0.1, 45, 45, 0, 1, texture[7]);
    beam(1.7,-1.7,1, 2.5, 0.1, 0.1, 135, 135, 0, 1, texture[7]);
@@ -395,21 +411,28 @@ static void scrambler(double x, double y , double z, double size) {
    glTranslated(x,y,z);
    glScaled(size,size,size);
 
-   // Draw the globals.spokes
-   glColor3f(0.5,0.5,0.5);
+   // Draw the spokes
    double conversion = 180/pi;
    int current_spoke;
    int speed = 15;
    double spin = globals.rotation*speed;
    double offset = 0;
+   if(globals.mushroom)
+      glColor3f(sin(333*globals.rotation),sin(222*globals.rotation),cos(94*globals.rotation));
+   else
+      glColor3f(0.5,0.5,0.5);
    for(current_spoke = 0; current_spoke < num_spokes; current_spoke++)
    {
       offset = current_spoke*(180/num_spokes);
       beam(0,2.75,0, 4, 0.15, 0.15,offset + conversion*spin, 0, 0, 90, texture[0]);
    }
+
+   if(globals.mushroom)
+      glColor3f(sin(333*globals.rotation),sin(222*globals.rotation),cos(94*globals.rotation));
+   else
+      glColor3f(1,1,1);
    for (i=0;i<num_spokes*2;i++)
    {
-      glColor3f(1,1,1);
       double passenger_box_x = r * sin(i*step+spin);
       double passenger_box_z = r * cos(i*step+spin);
       passenger_box(passenger_box_x, 1, passenger_box_z , 0.3,0.3,0.3 , 0, texture[5]);
@@ -440,7 +463,10 @@ static void scrambler(double x, double y , double z, double size) {
    }
 
    // center axis
-   glColor3f(1,1,1);
+   if(globals.mushroom)
+      glColor3f(sin(305*globals.rotation),sin(165*globals.rotation),cos(422*globals.rotation));
+   else
+      glColor3f(1,1,1);
    beam(0,0,0, 1, 1.5, 1, 90, 0, 0, 1, texture[5]);
    beam(0, 2.75, 0, 0.5, 1.5, 0.5, speed*conversion*globals.rotation, 0, 0, 90, texture[1]);
 
@@ -458,21 +484,26 @@ static void tower(double x, double y, double z, double size)
    glTranslated(x,y,z);
    glScaled(size,size,size);
 
-   // Draw the globals.spokes
-   glColor3f(0.5,0.5,0.5);
+   // Draw the spokes
    int speed = 5;
 
    double height_osc = -sin(globals.rotation*speed)*14;
    height_osc = height_osc < -13 ? -13 : height_osc;
 
-   glColor3f(1, 1, 1);
+   if(globals.mushroom)
+      glColor3f(sin(333*globals.rotation),sin(368*globals.rotation),cos(94*globals.rotation));
+   else
+      glColor3f(1, 1, 1);
    cylinder(0, 14, 0, 5, 0, 0, 0, 0, 0, 360, 0.3, 3, 0.3, texture[11]);
    double x_angle, z_angle, radius, offset2, spin;
    spin = globals.rotation*speed;
    x_angle = sin(globals.rotation*speed);
    z_angle = cos(globals.rotation*speed);
    
-   glColor3f(1, 1, 1);
+   if(globals.mushroom)
+      glColor3f(sin(30*globals.rotation),sin(102*globals.rotation),cos(58*globals.rotation));
+   else
+      glColor3f(1, 1, 1);
    cylinder(0, height_osc + 14, 0, 1, spin*20*pi, 0, spin*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
    // cylinder(0, height_osc + 14, 0, 1, x_angle*180, 0, 0, 0, 0, 360, 4, 1, 4, texture[2]);
 
@@ -503,7 +534,10 @@ static void hut(double x, double y, double z, double size)
    glTranslated(x,y,z);
    glScaled(size,size,size);
 
-   glColor3f(1,1,1);
+   if(globals.mushroom)
+      glColor3f(sin(323*globals.rotation),sin(111*globals.rotation),cos(212*globals.rotation));
+   else
+      glColor3f(1,1,1);
 
    cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[0]);
 // cylinder(double x, double y, double z, double r,
@@ -511,7 +545,10 @@ static void hut(double x, double y, double z, double size)
 //                   double thStart, double thEnd,
 //                   double dx, double dy, double dz, unsigned int texture)
 
-   glColor3f(1,1,1);
+   if(globals.mushroom)
+      glColor3f(sin(323*globals.rotation),sin(3*globals.rotation),cos(132*globals.rotation));
+   else
+      glColor3f(1,1,1);
    cylinder(0, 0, 0, 1, 0, 0, 0, 0, 0, 310, 1, 0.7, 1, texture[10]);
 
    glPopMatrix();
@@ -535,7 +572,7 @@ static void draw_lamp(){
    //  Location of viewer for lighting_struct.specular calculations
    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
    //  Two sided mode
-   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,1);
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,0);
    //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
    glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
    glEnable(GL_COLOR_MATERIAL);
@@ -634,6 +671,10 @@ void display()
      glDisable(GL_LIGHTING);
 
    sky(-1,-1,-1,100, 90, 270, texture[2]);
+   if(globals.mushroom)
+      glColor3f(sin(483*globals.rotation),sin(502*globals.rotation),cos(105*globals.rotation));
+   else
+      glColor3f(1,1,1);
    ground(-1, -1, -1, 20, 0, 20, 0, 0, 0, 100, lighting_struct, texture[3]);
 
    scene();
@@ -676,7 +717,8 @@ void display()
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
    glColor4f(0,0,0,0.5);
-   // glColor4f(sin(101*globals.rotation),sin(104*globals.rotation),cos(94*globals.rotation),0.5);
+   if(globals.mushroom)
+      glColor4f(sin(101*globals.rotation),sin(104*globals.rotation),cos(94*globals.rotation),0.5);
    //  Draw the shadow over the entire floor
    glBegin(GL_QUADS);
    glVertex3f(-Dfloor,Yfloor,-Dfloor);
@@ -852,6 +894,8 @@ void key(unsigned char ch,int x,int y)
       texture_num = ((texture_num < 0 ? -texture_num : texture_num) - 1)%12;
    else if (ch=='p' || ch=='P')
       globals.people = 1 - globals.people;
+   else if (ch=='m' || ch=='M')
+      globals.mushroom = 1 - globals.mushroom;
    //  Translate lighting_struct.shininess power to value (-1 => 0)
    lighting_struct.shinyvec[0] = lighting_struct.shininess<0 ? 0 : pow(2.0,lighting_struct.shininess);
 

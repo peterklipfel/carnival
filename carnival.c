@@ -590,7 +590,7 @@ void scene()
    hut(1, -0.3, -6, 1);
    hut(-17, -0.3, 20, 1);
 
-   person(0, 0 , 0, 1, 1);
+   person(0, 80, 0, 1, 1);
    glDisable(GL_LIGHTING);
 }
 

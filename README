@@ -2,7 +2,7 @@
 Carnival
 ================================================================================
 
-This project is a carnival.  It currently has 3 types of rides, that are configurable on the fly as well as an earthquake mode that has been implemented for 2 of the ride types.  
+This project is a carnival.  It currently has 3 types of rides and huts that have been placed throughout.  The rides are configurable on the fly and have an earthquake mode.
 
 To compile and run, execute the following commands in the directory of carnival.c
 	$ make
@@ -34,5 +34,4 @@ S          - increase the number of spokes
 v          - slow down ferris wheel
 V          - speed up ferris wheel
 
-
-I would like to create another ride or two, optimize the program (speed), and find appropriate textures for the rides
+I would like to allow the user to move through the scene with mouse and keyboard as my next goal

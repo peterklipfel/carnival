@@ -39,7 +39,6 @@ void initialize(){
 }
 // Textures
 unsigned int texture[20];
-int texture_num = 0;
 int objs[1];
 
 //shadows
@@ -790,10 +789,6 @@ void key(unsigned char ch,int x,int y)
    else if (ch == 'g' || ch == 'G')
       globals.axes = 1-globals.axes;
    //  Change field of view angle
-   else if (ch == '-' && ch>1)
-      globals.fov--;
-   else if (ch == '+' && ch<179)
-      globals.fov++;
    else if (ch == 'l')
    {
       if (globals.num_lights > 0)
@@ -859,10 +854,6 @@ void key(unsigned char ch,int x,int y)
       lighting_struct.shininess -= 1;
    else if (ch=='N' && lighting_struct.shininess<7)
       lighting_struct.shininess += 1;
-   else if (ch=='q')
-      texture_num = (texture_num+1) % 12;
-   else if (ch=='Q')
-      texture_num = ((texture_num < 0 ? -texture_num : texture_num) - 1)%12;
    else if (ch=='p' || ch=='P')
       globals.people = 1 - globals.people;
    else if (ch=='m' || ch=='M')

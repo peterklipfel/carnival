@@ -1,27 +1,13 @@
-/*
- *  Projections
- *  'm' to switch modes (projections)
- *  'a' to toggle globals.axes
- *  '0' snaps angles to 0,0
- *  arrows to rotate the world
- *  PgUp/PgDn zooms in/out
- *  +/- changes field of view of rperspective
- */
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <stdarg.h>
-// #include <math.h>
 #include "utilities.h"
 //  OpenGL with prototypes for glext
 #define GL_GLEXT_PROTOTYPES
-// #include <GL/glut.h>
 
 
 //Lighting
 Globals globals;
 LightingStruct lighting_struct;
 void initialize(){
-   globals.axes=0;       //  Display globals.axes
+   globals.axes=0;       //  Display axes
    globals.th=0;         //  Azimuth of view angle
    globals.ph=0;         //  Elevation of view angle
    globals.fov=55;       //  Field of view (for perspective)
@@ -37,7 +23,7 @@ void initialize(){
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
-   lighting_struct.distance  =  35;  // Light lighting_struct.distance
+   lighting_struct.distance  =  35;  // Light distance
    lighting_struct.inc       =  10;  // Ball increment
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
@@ -62,11 +48,6 @@ int objs[1];
 float N[] = {0, -1, 0}; // Normal vector for the plane
 float E[] = {0, Yfloor, 0 }; // Point of the plane
 
-
-//  Macro for sin & cos in degrees
-// #define Cos(th) cos(3.1415927/180*(th))
-// #define Sin(th) sin(3.1415927/180*(th))
-
 /*
  *  Convenience routine to output raster text
  *  Use VARARGS to make this more flexible
@@ -81,7 +62,7 @@ void Print(const char* format , ...)
    va_start(args,format);
    vsnprintf(buf,LEN,format,args);
    va_end(args);
-   //  Display the characters lighting_struct.one at a time at the current raster position
+   //  Display the characters one at a time at the current raster position
    while (*ch)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*ch++);
 }
@@ -226,8 +207,6 @@ static void ball(double x,double y,double z,double r)
    glPopMatrix();
 }
 
-// static void cylinder(double x,double y,double z,double r, double height)
-
 static void person(double x, double y , double z, double r, double height)
 {
    glColor3f(1,1,1);
@@ -244,7 +223,7 @@ static void passenger_box(double x,double y,double z,
                  double dx,double dy,double dz,
                  double th, unsigned int texture)
 {
-   //  Set lighting_struct.specular color to white
+   //  Set specular color to white
    float white[] = {1,1,1,1};
    float Emission[]  = {0.0,0.0,0.01*lighting_struct.emission,1.0};
    glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,lighting_struct.shinyvec);
@@ -267,7 +246,7 @@ static void passenger_box(double x,double y,double z,
       glColor3f(1,1,1);
    glBindTexture(GL_TEXTURE_2D,texture);
    //  passenger_box
-   // ball(0, +1.5, 0, 0.5);
+
    //  Front
    // glBindTexture(GL_TEXTURE_2D,texture[0]);
    glBegin(GL_QUADS);
@@ -386,8 +365,6 @@ static void ferris_wheel(double x, double y , double z, double size)
          offset = current_spoke*2*pi/num_spokes;
          for(spacing = 1; spacing < globals.num_lights+1; spacing++)
          {
-            // light(spacing*r*cos(offset + globals.rotation)/globals.num_lights, 
-            //       spacing*r*sin(offset + globals.rotation)/globals.num_lights, 0.35, 0.1, 90, 270);
             radius = spacing*r/globals.num_lights;
             x_angle = cos(offset + globals.rotation);
             y_angle = sin(offset + globals.rotation);
@@ -505,7 +482,6 @@ static void tower(double x, double y, double z, double size)
    else
       glColor3f(1, 1, 1);
    cylinder(0, height_osc + 14, 0, 1, spin*20*pi, 0, spin*speed*20*pi, 0, 0, 360, 4, 1, 4, texture[4]);
-   // cylinder(0, height_osc + 14, 0, 1, x_angle*180, 0, 0, 0, 0, 360, 4, 1, 4, texture[2]);
 
    if(globals.num_lights){
       for (i=0;i<num_spokes*2;i++)
@@ -540,10 +516,6 @@ static void hut(double x, double y, double z, double size)
       glColor3f(1,1,1);
 
    cone(0, 0.7, 0, 1.5, 90, -90, 0, 0, 0, 360, 1, 1, 1, texture[0]);
-// cylinder(double x, double y, double z, double r,
-//                   double th, double thX, double thY, double thZ,
-//                   double thStart, double thEnd,
-//                   double dx, double dy, double dz, unsigned int texture)
 
    if(globals.mushroom)
       glColor3f(sin(323*globals.rotation),sin(3*globals.rotation),cos(132*globals.rotation));
@@ -569,16 +541,16 @@ static void draw_lamp(){
    glEnable(GL_NORMALIZE);
    //  Enable lighting
    glEnable(GL_LIGHTING);
-   //  Location of viewer for lighting_struct.specular calculations
+   //  Location of viewer for specular calculations
    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,lighting_struct.local);
    //  Two sided mode
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,0);
-   //  glColor sets lighting_struct.ambient and lighting_struct.diffuse color materials
+   //  glColor sets ambient and diffuse color materials
    glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
    glEnable(GL_COLOR_MATERIAL);
    //  Enable light 0
    glEnable(GL_LIGHT0);
-   //  Set lighting_struct.ambient, lighting_struct.diffuse, lighting_struct.specular complighting_struct.onents and position of light 0
+   //  Set ambient, diffuse, specular components and position of light 0
    glLightfv(GL_LIGHT0,GL_AMBIENT ,Ambient);
    glLightfv(GL_LIGHT0,GL_DIFFUSE ,Diffuse);
    glLightfv(GL_LIGHT0,GL_SPECULAR,Specular);
@@ -644,7 +616,7 @@ void scene()
  */
 void display()
 {
-   const double len=1.5;  //  Length of globals.axes
+   const double len=1.5;  //  Length of axes
    float Position[]  = {lighting_struct.distance*Cos(lighting_struct.zh),lighting_struct.ylight,lighting_struct.distance*Sin(lighting_struct.zh),1.0};
 
    //  Erase the window and the depth buffer
@@ -659,7 +631,7 @@ void display()
    double Ez = +2*globals.dim*Cos(globals.th)*Cos(globals.ph);
    gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(globals.ph),0);
 
-   //  Flat or lighting_struct.smooth shading
+   //  Flat or mooth shading
    glShadeModel(lighting_struct.smooth ? GL_SMOOTH : GL_FLAT);
 
    // Light switch
@@ -728,7 +700,7 @@ void display()
    glEnd();
    glPopAttrib();
 
-   //  Draw globals.axes
+   //  Draw axes
    glColor3f(1,1,1);
    if (globals.axes)
    {
@@ -740,7 +712,7 @@ void display()
       glVertex3d(0.0,0.0,0.0);
       glVertex3d(0.0,0.0,len);
       glEnd();
-      //  Label globals.axes
+      //  Label axes
       glRasterPos3d(len,0.0,0.0);
       Print("X");
       glRasterPos3d(0.0,len,0.0);
@@ -783,10 +755,10 @@ void special(int key,int x,int y)
    //  Down arrow key - decrease elevation by 5 degrees
    else if (key == GLUT_KEY_DOWN)
       globals.ph -= 5;
-   //  PageUp key - increase globals.dim
+   //  PageUp key - increase dim
    else if (key == GLUT_KEY_PAGE_UP)
       globals.dim += 0.1;
-   //  PageDown key - decrease globals.dim
+   //  PageDown key - decrease dim
    else if (key == GLUT_KEY_PAGE_DOWN && globals.dim>1)
       globals.dim -= 0.1;
    //  Keep angles to +/-360 degrees
@@ -812,10 +784,9 @@ void key(unsigned char ch,int x,int y)
       globals.th = globals.ph = 0;
       globals.fov=55;
       globals.num_lights=1;
-      // globals.asp=1;     //  Aspect ratio
       globals.dim=5.0;
    }
-   //  Toggle globals.axes
+   //  Toggle axes
    else if (ch == 'g' || ch == 'G')
       globals.axes = 1-globals.axes;
    //  Change field of view angle
@@ -896,7 +867,7 @@ void key(unsigned char ch,int x,int y)
       globals.people = 1 - globals.people;
    else if (ch=='m' || ch=='M')
       globals.mushroom = 1 - globals.mushroom;
-   //  Translate lighting_struct.shininess power to value (-1 => 0)
+   //  Translate shininess power to value (-1 => 0)
    lighting_struct.shinyvec[0] = lighting_struct.shininess<0 ? 0 : pow(2.0,lighting_struct.shininess);
 
    //  Reproject

@@ -31,7 +31,6 @@ static void ground(double x,  double y,  double z,
 
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-   // glColor3f(1,1,1);
    glBindTexture(GL_TEXTURE_2D,texture);
 
    //  passenger_box
@@ -44,7 +43,6 @@ static void ground(double x,  double y,  double z,
    {
       for (j=0;j<quads;j++)
       {
-         // printf("x: %f, y: %f ---- i: %d, j: %d \n", 5*mul*(i+0), 5*mul*(j+0)-5, i, j);
          glTexCoord2f(mul*(i+0),mul*(j+0)); glVertex3d(5*mul*(i+0)-5,0, 5*mul*(j+0)-5);
          glTexCoord2f(mul*(i+1),mul*(j+0)); glVertex3d(5*mul*(i+1)-5,0, 5*mul*(j+0)-5);
          glTexCoord2f(mul*(i+1),mul*(j+1)); glVertex3d(5*mul*(i+1)-5,0, 5*mul*(j+1)-5);
@@ -62,7 +60,6 @@ static void ground(double x,  double y,  double z,
 
 static void Vertex(double th,double ph)
 {
-   // glVertex3d(Sin(th)*Cos(ph) , Sin(ph) , Cos(th)*Cos(ph));
    double x = Sin(th)*Cos(ph);
    double y = Cos(th)*Cos(ph);
    double z =         Sin(ph);
@@ -96,7 +93,6 @@ static void cylinder(double x, double y, double z, double r,
     //  Set texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    // glColor3f(1, 1, 1);
    
     //Begins Drawing:
     glBegin(GL_QUAD_STRIP);
@@ -138,9 +134,7 @@ static void cylinder(double x, double y, double z, double r,
         //Connects Center to Endpoint with GL_Quad_Strip:
         for(k = 0; k <= 360; k += d)
         {
-            // glTexCoord2f(k, 1);
             glVertex3d(Cos(k), j, Sin(k) );
-            // glTexCoord2f(0, -1);
             glVertex3d(0, j, 0);
        
         }
@@ -174,7 +168,6 @@ static void cone(double x, double y, double z, double r,
     //  Set texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    // glColor3f(1, 1, 1);
    
 
    glBegin(GL_TRIANGLES);
@@ -220,7 +213,6 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
    glTranslated(x,y,z);
    glScaled(r,r,r);
    glColor3f(sin(10*x), sin(7*x+3*y), cos(y*y+x*4));
-   // glColor3f(0, 0, 0);
    //  Latitude bands
    for (ph=start_angle;ph<end_angle;ph+=d)
    {
@@ -234,15 +226,11 @@ static void light(double x,double y,double z,double r, double start_angle, doubl
         //  For a sphere at the origin, the position
         //  and normal vectors are the same
         glNormal3d(x,y,z);
-        // glTexCoord2d((90-th)/h>h = 360.0+90,ph/360.0+0.5);
         glVertex3d(x,y,z);
-        // Vertex(th,ph);
         x = Sin(th)*Cos(ph+d);
         y = Cos(th)*Cos(ph+d);
         z =         Sin(ph+d);
-        // Vertex(th,ph+d);
         glNormal3d(x,y,z);
-        // glTexCoord2d((90-th)/360.0+90,ph/360.0+0.5);
         glVertex3d(x,y,z);
       }
       glEnd();
@@ -264,7 +252,6 @@ static void sky(double x,double y,double z,double r, double start_angle,
    glTranslated(x,y,z);
    glScaled(r,r,r);
    glRotated(90,90,0,0);
-   // glColor3f(0, .75, 1);
    glColor3f(1, 1, 1);
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, texture);

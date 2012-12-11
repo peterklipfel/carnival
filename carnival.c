@@ -37,7 +37,7 @@ void initialize(){
 
    lighting_struct.lamp      =   1;
    lighting_struct.one       =   1;  // Unit value
-   lighting_struct.distance  =  40;  // Light lighting_struct.distance
+   lighting_struct.distance  =  35;  // Light lighting_struct.distance
    lighting_struct.inc       =  10;  // Ball increment
    lighting_struct.smooth    =   1;  // Smooth/Flat shading
    lighting_struct.local     =   0;  // Local Viewer Model
@@ -47,7 +47,7 @@ void initialize(){
    lighting_struct.specular  =   0;  // Specular intensity (%)
    lighting_struct.shininess =   0;  // Shininess (power of two)
    lighting_struct.zh        =  90;  // Light azimuth
-   lighting_struct.ylight    =   3;  // Elevation of light
+   lighting_struct.ylight    =  30;  // Elevation of light
 
 
 }
@@ -943,7 +943,7 @@ int main(int argc,char* argv[])
    //  Request double buffered, true color window with Z buffering at 600x600
    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
    glutInitWindowSize(1920,1080);
-   glutCreateWindow("Ferris Wheel");
+   glutCreateWindow("Carnival");
    //  Set callbacks
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);

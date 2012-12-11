@@ -2,9 +2,13 @@
 Carnival
 ================================================================================
 
-This project is a carnival.  It currently has 3 types of rides and huts that have been placed throughout.  The rides are configurable on the fly and have an earthquake mode.
+This project is a carnival.  It currently has 3 types of rides and 1 type of hut that have been placed throughout.  The rides are configurable on the fly and have an earthquake mode ("t").  I have left a head at the top of the scene to watch over the carnival.  It is at the top of the skydome at x = y = 0.  If you think your hardware is up to the task, you can press 'p' to try to render faces in the rides.  This has not been optimized, so it makes most machines grind to a halt.
 
-To compile and run, execute the following commands in the directory of carnival.c
+Also, press "m"
+
+So, when you open the program, make sure to press "m", "t", and "p"
+
+To compile and run, execute the following commands in the directory of carnival.c (Note: you must have an openGL development environment on your machine)
 	$ make
 	$ ./carnival
 
@@ -13,11 +17,12 @@ esc        - exit
 Arrow Keys - Move around space
 page up    - increase the view size (zoom out)
 page down	 - decrease the view size (zoom in)
+b(or B)	   - toggle lighting effects
 g(or G)    - toggle axes
+m(or M)    - toggle mezmerize mode
+p(or P)    - toggle person mode (Warning: this requires very good hardware)
 r(or R)    - reset display 
 t(or T)    - toggle earthquake (tremor) mode
-b(or B)	   - toggle lighting effects
-m(or M)    - toggle mushroom mode
 a          - decrease amient light
 A          - increase ambient light
 c          - decrease specularity
@@ -35,4 +40,3 @@ S          - increase the number of spokes
 v          - slow down ferris wheel
 V          - speed up ferris wheel
 
-I would like to allow the user to move through the scene with mouse and keyboard as my next goal
